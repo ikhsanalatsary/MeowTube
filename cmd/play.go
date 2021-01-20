@@ -225,7 +225,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside audioCmd Run with args: %v\n", args)
-		detailURL := "/api/v1/videos/" + args[1] + "?fields=formatStreams,title,author,genre,adaptiveFormats"
+		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats"
 		source, err := instances.FindFastest(&instances.InstanceList, detailURL)
 		if err != nil {
 			log.Fatal(err)

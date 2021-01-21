@@ -6,19 +6,19 @@ import (
 	json2 "github.com/nwidger/jsoncolor"
 )
 
-type Trending []TrendingElement
+type Videos []VideoElement
 
-func UnmarshalTrending(data []byte) (Trending, error) {
-	var r Trending
+func UnmarshalVideo(data []byte) (Videos, error) {
+	var r Videos
 	err := json.Unmarshal(data, &r)
 	return r, err
 }
 
-func (r *Trending) Marshal() ([]byte, error) {
+func (r *Videos) Marshal() ([]byte, error) {
 	return json2.MarshalIndent(r, "", " ")
 }
 
-type TrendingElement struct {
+type VideoElement struct {
 	Type      Type   `json:"type"`
 	Title     string `json:"title"`
 	VideoID   string `json:"videoId"`

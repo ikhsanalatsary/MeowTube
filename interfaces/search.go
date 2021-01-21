@@ -31,7 +31,7 @@ type SearchElement struct {
 type Type string
 
 const (
-	Channel  Type = "channel"
-	Playlist Type = "playlist"
-	Video    Type = "video"
+	ChannelType  Type = "channel"
+	PlaylistType Type = "playlist"
+	VideoType    Type = "video"
 )

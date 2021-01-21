@@ -192,7 +192,8 @@ to quickly create a Cobra application.`,
 					os.Exit(1)
 				}
 				for _, v := range res.AdaptiveFormats {
-					if string(*v.Container) == string(interfaces.Mp4) && string(*v.Resolution) == resolution {
+					if v.Container != nil && *v.Container == interfaces.Mp4 && v.Resolution != nil && string(*v.Resolution) == resolution && *v.Encoding == "h264" {
+						fmt.Println("v.container")
 						flags[len(flags)-1] = v.URL
 					}
 				}
@@ -265,8 +266,76 @@ to quickly create a Cobra application.`,
 	},
 }
 
+var playlistCmd = &cobra.Command{
+	Use:   "playlist [no options!] :playlistId",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Args: cobra.MinimumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Printf("Inside playlistCmd Run with args: %v\n", args)
+		playlistURL := "/api/v1/playlists/" + args[0]
+		source, err := instances.FindFastest(&instances.InstanceList, playlistURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer source.Resp.Body.Close()
+		data, err := ioutil.ReadAll(source.Resp.Body)
+		res, err := interfaces.UnmarshalPlaylist(data)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if len(res.Videos) > 0 {
+			fmt.Println("\n Requesting all playlists with " + source.FastestURL + "...")
+			playlists := instances.RequestAllPlaylist(source.FastestURL, res.Videos)
+			if len(playlists) == 0 {
+				fmt.Println("Requested videos not available!")
+				os.Exit(1)
+			}
+			fmt.Println("Total videos: ", len(playlists))
+			flags := []string{
+				"--video-title=" + res.Title,
+				"--meta-title=" + res.Title,
+				"--meta-artist=" + res.Author,
+				"--meta-author=" + res.Author,
+				"--input-title-format=" + res.Title,
+			}
+			for i, v := range playlists {
+				if i == 10 {
+					break
+				}
+				if v != nil {
+					if len(v.FormatStreams) > 0 {
+						flags = append(flags, v.FormatStreams[0].URL)
+					} else {
+						fmt.Println("Cannot play stream")
+						os.Exit(1)
+					}
+				} else {
+					fmt.Println("Cannot play stream")
+					os.Exit(1)
+				}
+			}
+			command := exec.Command("vlc", flags...)
+			err = command.Start()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println("vlc opened...")
+			os.Exit(0)
+		} else {
+			fmt.Println("No videos found!")
+			os.Exit(1)
+		}
+	},
+}
+
 func init() {
-	playCmd.AddCommand(videoCmd, audioCmd)
+	playCmd.AddCommand(videoCmd, audioCmd, playlistCmd)
 	rootCmd.AddCommand(playCmd)
 
 	// Here you will define your flags and configuration settings.

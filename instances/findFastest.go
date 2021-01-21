@@ -22,25 +22,34 @@ func FindFastest(urls *[]string, path string) (instance FastestInstance, err err
 	resError := make(chan error)
 
 	for _, url := range *urls {
-		mirrorURL := url + path
+		mirrorURL := url
 		go func() {
 			start := time.Now()
-			res, err := http.Get(mirrorURL)
+			res, err := http.Get(mirrorURL + path)
 			latency := time.Now().Sub(start) / time.Millisecond
 			if err == nil {
+				urlChan <- mirrorURL
+				latencyChan <- latency
 				if res.StatusCode >= 200 && res.StatusCode < 400 {
-					urlChan <- mirrorURL
-					latencyChan <- latency
+					fmt.Print("Succeed request url: ", mirrorURL+path)
 					resp <- *res
 					resError <- nil
 				} else {
-					fmt.Println(mirrorURL)
+					fmt.Println(mirrorURL + path)
 					resError <- errors.New("Unable to request")
 				}
 			} else {
 				resError <- err
 			}
+			for {
+				select {
+				case <-resp:
+				case <-resError:
+					return
+				}
+			}
 		}()
 	}
+
 	return FastestInstance{<-urlChan, <-latencyChan, <-resp}, <-resError
 }

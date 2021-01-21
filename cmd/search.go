@@ -53,7 +53,7 @@ var searchDate = map[string]string{
 	"year":  "year",
 }
 
-var q string
+// var q string
 var searchRegion string
 var searchType string
 var page int32
@@ -80,8 +80,9 @@ duration: "short", "long"
 type: "video", "playlist", "channel", "all", (default: video)
 features: "hd", "subtitles", "creative_commons", "3d", "live", "purchased", "4k", "360", "location", "hdr" (comma separated: e.g. "&features=hd,subtitles,3d,live")
 region: ISO 3166 country code (default: "US")`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		var query string = "?q=" + q + "&fields=type,title,author,videoId,playlistId,authorId,publishedText"
+		var query string = "?q=" + args[0] + "&fields=type,title,author,videoId,playlistId,authorId,publishedText"
 		if len(region) == 2 {
 			query += "&region=" + region
 		}
@@ -158,13 +159,13 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// searchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	searchCmd.Flags().StringVarP(&q, "q", "q", "", "Search criteria")
+	// searchCmd.Flags().StringVar(&q, "q", "", "Search criteria")
 	searchCmd.Flags().Int32VarP(&page, "page", "p", 0, "Request on specific page")
 	searchCmd.Flags().StringVarP(&sort, "sortby", "s", "", "Sort criteria, e.g: \"relevance\", \"rating\", \"upload_date\", \"view_count\"")
 	searchCmd.Flags().StringVarP(&date, "date", "D", "", "date criteria, e.g: \"hour\", \"today\", \"week\", \"month\", \"year\"")
 	searchCmd.Flags().StringVarP(&duration, "duration", "d", "", "duration criteria, e.g: \"short\", \"long\"")
 	searchCmd.Flags().StringVarP(&searchType, "type", "t", "", "type criteria, e.g: \"video\", \"playlist\", \"channel\", \"all\", (default: video)")
-	searchCmd.Flags().StringVarP(&region, "region", "r", "", "To see trendings in a specific region in format ISO 3166 country code (default: \"US\")")
+	searchCmd.Flags().StringVarP(&region, "region", "r", "", "To see search results in a specific region in format ISO 3166 country code (default: \"US\")")
 	searchCmd.Flags().StringVarP(&features, "features", "f", "", "\"hd\", \"subtitles\", \"creative_commons\", \"3d\", \"live\", \"purchased\", \"4k\", \"360\", \"location\", \"hdr\" (comma separated: e.g. \"&features=hd,subtitles,3d,live\")")
-	searchCmd.MarkFlagRequired("q")
+	// searchCmd.MarkFlagRequired("q")
 }

@@ -79,7 +79,7 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			log.Fatal(err)
 		}
-		res, err := interfaces.UnmarshalTrending(data)
+		res, err := interfaces.UnmarshalVideo(data)
 		if err != nil {
 			log.Fatal(err)
 		}

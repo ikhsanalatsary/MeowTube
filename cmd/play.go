@@ -21,6 +21,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/ikhsanalatsary/MeowTube/instances"
@@ -28,6 +29,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var audioOnly bool
 var fullscreen bool
 var resolution string
 var resolutions = map[string]string{
@@ -305,19 +307,23 @@ to quickly create a Cobra application.`,
 				"--input-title-format=" + res.Title,
 			}
 			for i, v := range playlists {
-				if i == 10 {
+				if runtime.GOOS == "windows" && i == 10 {
 					break
 				}
 				if v != nil {
-					if len(v.FormatStreams) > 0 {
-						flags = append(flags, v.FormatStreams[0].URL)
+					if audioOnly {
+						if len(v.AdaptiveFormats) > 1 {
+							for _, v := range v.AdaptiveFormats {
+								if strings.Contains(v.Type, "audio") && string(*v.Container) == string(interfaces.M4A) {
+									flags = append(flags, v.URL)
+								}
+							}
+						}
 					} else {
-						fmt.Println("Cannot play stream")
-						os.Exit(1)
+						if len(v.FormatStreams) > 0 {
+							flags = append(flags, v.FormatStreams[0].URL)
+						}
 					}
-				} else {
-					fmt.Println("Cannot play stream")
-					os.Exit(1)
 				}
 			}
 			command := exec.Command("vlc", flags...)
@@ -349,4 +355,5 @@ func init() {
 	// playCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	videoCmd.Flags().BoolVarP(&fullscreen, "fullscreen", "f", false, "Fullscreen video output (default disabled)")
 	videoCmd.Flags().StringVarP(&resolution, "resolution", "r", "", "Select high resolution streaming 144p, 240p, 360p, 480p, 720p, 1080p  (default 360p)")
+	playlistCmd.Flags().BoolVarP(&audioOnly, "audio-only", "a", false, "Play the playlist in audio format only")
 }

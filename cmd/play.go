@@ -20,7 +20,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"runtime"
 	"strings"
 
@@ -205,14 +204,8 @@ to quickly create a Cobra application.`,
 			println("fullscreen")
 			flags = append(flags, "--fullscreen")
 		}
-		fmt.Println(strings.Join(flags, " "))
-		command := exec.Command("vlc", flags...)
-		err = command.Start()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("vlc opened...")
-		os.Exit(0)
+		// fmt.Println(strings.Join(flags, " "))
+		VLC.Execute(flags...)
 	},
 }
 
@@ -258,13 +251,7 @@ to quickly create a Cobra application.`,
 			fmt.Println("Cannot play stream")
 			os.Exit(1)
 		}
-		command := exec.Command("vlc", flags...)
-		err = command.Start()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println("vlc opened...")
-		os.Exit(0)
+		VLC.Execute(flags...)
 	},
 }
 
@@ -326,13 +313,7 @@ to quickly create a Cobra application.`,
 					}
 				}
 			}
-			command := exec.Command("vlc", flags...)
-			err = command.Start()
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Println("vlc opened...")
-			os.Exit(0)
+			VLC.Execute(flags...)
 		} else {
 			fmt.Println("No videos found!")
 			os.Exit(1)

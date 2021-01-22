@@ -13,15 +13,12 @@ type VideoLAN struct {
 	vlc string
 }
 
-var executableFile string
-
 // New initialization VideoLAN
 func New() *VideoLAN {
 	vlc, err := exec2.LookPath("vlc")
 	if err != nil {
 		log.Fatal(err)
 	}
-	executableFile = vlc
 	return &VideoLAN{
 		vlc: vlc,
 	}
@@ -39,4 +36,9 @@ func (v *VideoLAN) Execute(args ...string) (stdOut string, stdErr string, err er
 	err = cmd.Start()
 	stdOut, stdErr = stdout.String(), stderr.String()
 	return
+}
+
+// GetVlc to get value of VideoLAN.vlc
+func (v *VideoLAN) GetVlc() string {
+	return v.vlc
 }

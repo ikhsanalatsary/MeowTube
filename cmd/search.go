@@ -21,6 +21,8 @@ import (
 	"log"
 	"os"
 
+	url "net/url"
+
 	"github.com/ikhsanalatsary/MeowTube/instances"
 	"github.com/ikhsanalatsary/MeowTube/interfaces"
 	"github.com/spf13/cobra"
@@ -64,7 +66,7 @@ var features string
 
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
-	Use:   "search",
+	Use:   "search \"search criteria\"",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -80,9 +82,9 @@ duration: "short", "long"
 type: "video", "playlist", "channel", "all", (default: video)
 features: "hd", "subtitles", "creative_commons", "3d", "live", "purchased", "4k", "360", "location", "hdr" (comma separated: e.g. "&features=hd,subtitles,3d,live")
 region: ISO 3166 country code (default: "US")`,
-	Args: cobra.MaximumNArgs(1),
+	Args: cobra.RangeArgs(1, 1),
 	Run: func(cmd *cobra.Command, args []string) {
-		var query string = "?q=" + args[0] + "&fields=type,title,author,videoId,playlistId,authorId,publishedText"
+		var query string = "?q=" + url.QueryEscape(args[0]) + "&fields=type,title,author,videoId,playlistId,authorId,publishedText"
 		if len(region) == 2 {
 			query += "&region=" + region
 		}

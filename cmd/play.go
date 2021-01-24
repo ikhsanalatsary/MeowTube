@@ -193,11 +193,12 @@ to quickly create a Cobra application.`,
 					os.Exit(1)
 				}
 				for _, v := range res.AdaptiveFormats {
-					if v.Container != nil && *v.Container == interfaces.Mp4 && v.Resolution != nil && string(*v.Resolution) == resolution && *v.Encoding == "h264" {
+					if v.Container != nil && *v.Container == interfaces.Webm && v.Resolution != nil && string(*v.Resolution) == resolution && *v.Encoding == "vp9" {
 						fmt.Println("v.container")
 						flags[len(flags)-1] = v.URL
 					}
 				}
+				flags = append(flags, ":input-slave="+res.AdaptiveFormats[0].URL, ":network-caching=1000")
 			}
 		}
 		if fullscreen {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"os/exec"
+	"runtime"
 
 	exec2 "github.com/cli/safeexec"
 )
@@ -15,7 +16,11 @@ type VideoLAN struct {
 
 // New initialization VideoLAN
 func New() *VideoLAN {
-	vlc, err := exec2.LookPath("vlc")
+	v := "vlc"
+	if runtime.GOOS == "darwin" {
+		v = "VLC"
+	}
+	vlc, err := exec2.LookPath(v)
 	if err != nil {
 		log.Fatal(err)
 	}

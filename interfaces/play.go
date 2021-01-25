@@ -18,6 +18,7 @@ type FormatStream struct {
 	Author          string                `json:"author"`
 	AdaptiveFormats []AdaptiveFormat      `json:"adaptiveFormats"`
 	FormatStreams   []FormatStreamElement `json:"formatStreams"`
+	LengthSeconds   int64                 `json:"lengthSeconds"`
 }
 
 type AdaptiveFormat struct {

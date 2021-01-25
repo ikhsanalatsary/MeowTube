@@ -19,17 +19,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
-
-	"github.com/ikhsanalatsary/MeowTube/vlc"
+	Vlc "github.com/ikhsanalatsary/MeowTube/vlc"
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
 
 // VLC instance
-var VLC = vlc.New()
+var VLC = Vlc.New()
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

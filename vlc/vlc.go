@@ -2,6 +2,7 @@ package vlc
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"os/exec"
 	"runtime"
@@ -38,7 +39,8 @@ func (v *VideoLAN) Execute(args ...string) (stdOut string, stdErr string, err er
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	err = cmd.Start()
+	err = cmd.Run()
+	fmt.Println(err)
 	stdOut, stdErr = stdout.String(), stderr.String()
 	return
 }

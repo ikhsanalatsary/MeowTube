@@ -20,11 +20,11 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"runtime"
 	"strings"
 
 	"github.com/ikhsanalatsary/MeowTube/instances"
 	"github.com/ikhsanalatsary/MeowTube/interfaces"
+	"github.com/ikhsanalatsary/MeowTube/vlc"
 	"github.com/spf13/cobra"
 )
 
@@ -165,7 +165,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside videoCmd Run with args: %v\n", args)
-		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats"
+		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
 		source, err := instances.FindFastest(&instances.InstanceList, detailURL)
 		if err != nil {
 			log.Fatal(err)
@@ -222,7 +222,7 @@ to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside audioCmd Run with args: %v\n", args)
-		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats"
+		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
 		source, err := instances.FindFastest(&instances.InstanceList, detailURL)
 		if err != nil {
 			log.Fatal(err)
@@ -279,6 +279,15 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			log.Fatal(err)
 		}
+		pl := &vlc.VLCPlaylist{}
+		pl.Xmlns = "http://xspf.org/ns/0/"
+		pl.Text = "xmlns"
+		pl.Vlc = "http://www.videolan.org/vlc/playlist/ns/0/"
+		pl.Version = "1"
+		pl.Title = "Playlist"
+		// pl.Extension.Application = "http://www.videolan.org/vlc/playlist/0"
+		Tracks := []vlc.Track{}
+		Items := []vlc.ExtensionItem{}
 		if len(res.Videos) > 0 {
 			fmt.Println("\n Requesting all playlists with " + source.FastestURL + "...")
 			playlists := instances.RequestAllPlaylist(source.FastestURL, res.Videos)
@@ -288,33 +297,104 @@ to quickly create a Cobra application.`,
 			}
 			fmt.Println("Total videos: ", len(playlists))
 			flags := []string{
-				"--video-title=" + res.Title,
-				"--meta-title=" + res.Title,
-				"--meta-artist=" + res.Author,
-				"--meta-author=" + res.Author,
-				"--input-title-format=" + res.Title,
+				"--network-caching=1000",
+				// "--video-title=" + res.Title,
+				// "--meta-title=" + res.Title,
+				// "--meta-artist=" + res.Author,
+				// "--meta-author=" + res.Author,
+				// "--input-title-format=" + res.Title,
 			}
 			for i, v := range playlists {
-				if runtime.GOOS == "windows" && i == 10 {
-					break
+				id := fmt.Sprint(i)
+				localOption := []string{
+					"video-title=" + v.Title,
+					"input-title-format=" + v.Title,
+					"meta-title=" + v.Title,
+					"meta-artist=" + v.Author,
+					"meta-author=" + v.Author,
 				}
 				if v != nil {
 					if audioOnly {
 						if len(v.AdaptiveFormats) > 1 {
-							for _, v := range v.AdaptiveFormats {
-								if strings.Contains(v.Type, "audio") && string(*v.Container) == string(interfaces.M4A) {
-									flags = append(flags, v.URL)
+							for _, a := range v.AdaptiveFormats {
+								if strings.Contains(a.Type, "audio") && string(*a.Container) == string(interfaces.M4A) {
+									trEx := vlc.TrackExtension{
+										Application: "http://www.videolan.org/vlc/playlist/0",
+										ID:          id,
+										Option:      localOption,
+									}
+									tr := vlc.Track{
+										Location:  a.URL,
+										Extension: trEx,
+										Creator:   v.Author,
+										Title:     v.Title,
+										Duration:  fmt.Sprint(v.LengthSeconds),
+									}
+									Tracks = append(Tracks, tr)
+									exItem := vlc.ExtensionItem{
+										Tid: id,
+									}
+									Items = append(Items, exItem)
+									// flags = append(flags, a.URL, ":video-title="+v.Title, ":meta-title="+v.Title, ":meta-artist="+v.Author, ":meta-author="+v.Title)
 								}
 							}
 						}
 					} else {
 						if len(v.FormatStreams) > 0 {
-							flags = append(flags, v.FormatStreams[0].URL)
+							trEx := vlc.TrackExtension{
+								Application: "http://www.videolan.org/vlc/playlist/0",
+								ID:          id,
+								Option:      localOption,
+							}
+							tr := vlc.Track{
+								Location:  v.FormatStreams[0].URL,
+								Extension: trEx,
+								Creator:   v.Author,
+								Title:     v.Title,
+								Duration:  fmt.Sprint(v.LengthSeconds),
+							}
+							Tracks = append(Tracks, tr)
+							exItem := vlc.ExtensionItem{
+								Tid: id,
+							}
+							Items = append(Items, exItem)
+							// flags = append(flags, v.FormatStreams[0].URL, ":video-title="+v.Title, ":meta-title="+v.Title, ":meta-artist="+v.Author, ":meta-author="+v.Title)
 						}
 					}
 				}
 			}
+			pl.TrackList = vlc.TrackList{
+				Track: Tracks,
+			}
+			pl.Extension = vlc.Extension{
+				Application: "http://www.videolan.org/vlc/playlist/0",
+				Item:        Items,
+			}
+			tmpFile, err := ioutil.TempFile(os.TempDir(), "playlist-"+"*.xspf")
+			if err != nil {
+				log.Fatal("Cannot create temporary file", err)
+			}
+
+			fmt.Println("Created Temporary Playlist File: " + tmpFile.Name())
+
+			// Example writing to the file
+			text, err := vlc.MarshalFrom(pl)
+			if err != nil {
+				log.Fatal("Failed to marshal from data", err)
+			}
+			if _, err = tmpFile.Write(text); err != nil {
+				log.Fatal("Failed to write to temporary file", err)
+			}
+			flags = append(flags, tmpFile.Name())
+			// Remember to clean up the file afterwards
+			defer os.Remove(tmpFile.Name())
 			VLC.Execute(flags...)
+			fmt.Println("Deleting Temporary Playlist")
+
+			// Close the file
+			if err := tmpFile.Close(); err != nil {
+				log.Fatal(err)
+			}
 		} else {
 			fmt.Println("No videos found!")
 			os.Exit(1)

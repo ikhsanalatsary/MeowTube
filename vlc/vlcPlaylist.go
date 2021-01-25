@@ -14,7 +14,7 @@ func (r *VLCPlaylist) Marshal() ([]byte, error) {
 }
 
 func MarshalFrom(v *VLCPlaylist) ([]byte, error) {
-	text, err := xml.MarshalIndent(v, "  ", "    ")
+	text, err := xml.Marshal(v)
 	return []byte(xml.Header + string(text)), err
 }
 

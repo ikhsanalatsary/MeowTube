@@ -145,7 +145,7 @@ region: ISO 3166 country code (default: "US")`,
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(string(m))
+		os.Stdout.Write(m)
 	},
 }
 

@@ -87,7 +87,8 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(string(m))
+		// fmt.Println(string(m))
+		os.Stdout.Write(m)
 	},
 }
 

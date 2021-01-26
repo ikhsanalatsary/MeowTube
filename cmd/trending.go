@@ -41,17 +41,12 @@ var trendingTypes = map[string]string{
 // trendingCmd represents the trending command
 var trendingCmd = &cobra.Command{
 	Use:   "trending",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "To see trending videos on YouTube",
+	Long: `This command support this options:
+type: "music", "gaming", "news", "movies"
+region: ISO 3166 country code (default: "US")`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Request trending...")
-		fmt.Println(args)
-		fmt.Println("Region: " + region)
 		var query string
 		if len(region) == 2 {
 			query = "?region=" + region

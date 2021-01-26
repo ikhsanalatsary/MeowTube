@@ -43,13 +43,9 @@ var resolutions = map[string]string{
 // playCmd represents the play command
 var playCmd = &cobra.Command{
 	Use:   "play YoutubeURL",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "To play YouTube video",
+	Long: `This command requires videoID or youtube url without options.
+The difference with video commnad is, this command not supported any options`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("VLC => ", VLC.GetVlc())
@@ -64,14 +60,9 @@ to quickly create a Cobra application.`,
 
 var videoCmd = &cobra.Command{
 	Use:   "video [--fullscreen, --resolution] :videoId",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.MinimumNArgs(1),
+	Short: "To play YouTube video",
+	Long:  `This command requires videoID or youtube url with optional options`,
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside videoCmd Run with args: %v\n", args)
 		videoID := args[0]
@@ -127,14 +118,9 @@ to quickly create a Cobra application.`,
 
 var audioCmd = &cobra.Command{
 	Use:   "audio [no options!] :videoId",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.MinimumNArgs(1),
+	Short: "To play audio only",
+	Long:  `This command requires videoID or youtube url without options`,
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside audioCmd Run with args: %v\n", args)
 		videoID := args[0]

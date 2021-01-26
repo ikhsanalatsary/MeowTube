@@ -57,96 +57,8 @@ to quickly create a Cobra application.`,
 			if len(args) == 1 {
 				fmt.Println("No Command")
 			} else if len(args) == 2 {
-				// if args[0] == "video" {
-				// 	// detailURL := source.FastestURL + "/api/v1/videos/" + args[1] + "?fields=formatStreams,title,author,genre"
-				// 	detailURL := "/api/v1/videos/" + args[1] + "?fields=formatStreams,title,author,genre,adaptiveFormats"
-				// 	source, err := instances.FindFastest(&instances.InstanceList, detailURL)
-				// 	if err != nil {
-				// 		log.Fatal(err)
-				// 	}
-				// 	// fmt.Println("Requesting " + source.FastestURL)
-				// 	defer source.Resp.Body.Close()
-				// 	data, err := ioutil.ReadAll(source.Resp.Body)
-				// 	res, err := interfaces.UnmarshalFormatStream(data)
-				// 	if err != nil {
-				// 		log.Fatal(err)
-				// 	}
-				// 	flags := []string{
-				// 		"--video-title=" + res.Title,
-				// 		"--meta-title=" + res.Title,
-				// 		"--meta-artist=" + res.Author,
-				// 		"--meta-author=" + res.Author,
-				// 		"--meta-genre=" + res.Genre,
-				// 		"--input-title-format=" + res.Title,
-				// 		res.FormatStreams[0].URL,
-				// 	}
-				// 	if resolution != "" {
-				// 		if len(res.AdaptiveFormats) > 1 {
-				// 			if _, ok := resolutions[string(resolution)]; !ok {
-				// 				fmt.Println("Invalid resolution")
-				// 				os.Exit(1)
-				// 			}
-				// 			for _, v := range res.AdaptiveFormats {
-				// 				if string(*v.Container) == string(interfaces.Mp4) && string(*v.Resolution) == resolution {
-				// 					flags[len(flags)-1] = v.URL
-				// 				}
-				// 			}
-				// 		}
-				// 	}
-				// 	if fullscreen {
-				// 		println("fullscreen")
-				// 		flags = append(flags, "--fullscreen")
-				// 	}
-				// 	fmt.Println(strings.Join(flags, " "))
-				// 	command := exec.Command("vlc", flags...)
-				// 	err = command.Start()
-				// 	if err != nil {
-				// 		log.Fatal(err)
-				// 	}
-				// 	fmt.Println("vlc opened...")
-				// 	os.Exit(0)
-				// } else if args[0] == "audio" {
-				// 	detailURL := "/api/v1/videos/" + args[1] + "?fields=formatStreams,title,author,genre,adaptiveFormats"
-				// 	source, err := instances.FindFastest(&instances.InstanceList, detailURL)
-				// 	if err != nil {
-				// 		log.Fatal(err)
-				// 	}
-				// 	// fmt.Println("Requesting " + source.FastestURL)
-				// 	defer source.Resp.Body.Close()
-				// 	data, err := ioutil.ReadAll(source.Resp.Body)
-				// 	res, err := interfaces.UnmarshalFormatStream(data)
-				// 	if err != nil {
-				// 		log.Fatal(err)
-				// 	}
-				// 	flags := []string{
-				// 		"--video-title=" + res.Title,
-				// 		"--meta-title=" + res.Title,
-				// 		"--meta-artist=" + res.Author,
-				// 		"--meta-author=" + res.Author,
-				// 		"--meta-genre=" + res.Genre,
-				// 		"--input-title-format=" + res.Title,
-				// 	}
-				// 	if len(res.AdaptiveFormats) > 1 {
-				// 		for _, v := range res.AdaptiveFormats {
-				// 			if strings.Contains(v.Type, "audio") && string(*v.Container) == string(interfaces.M4A) {
-				// 				flags = append(flags, v.URL)
-				// 			}
-				// 		}
-				// 	} else {
-				// 		fmt.Println("Cannot play stream")
-				// 		os.Exit(1)
-				// 	}
-				// 	command := exec.Command("vlc", flags...)
-				// 	err = command.Start()
-				// 	if err != nil {
-				// 		log.Fatal(err)
-				// 	}
-				// 	fmt.Println("vlc opened...")
-				// 	os.Exit(0)
-				// }
 				fmt.Println("Inside Play")
 			}
-
 		} else {
 			fmt.Println("No Command")
 		}
@@ -166,9 +78,9 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside videoCmd Run with args: %v\n", args)
 		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
-		source, err := instances.FindFastest(&instances.InstanceList, detailURL)
-		if err != nil {
-			log.Fatal(err)
+		source := instances.FindFastest(detailURL)
+		if source.Error != nil {
+			log.Fatal(source.Error)
 		}
 		// fmt.Println("Requesting " + source.FastestURL)
 		defer source.Resp.Body.Close()
@@ -223,9 +135,9 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside audioCmd Run with args: %v\n", args)
 		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
-		source, err := instances.FindFastest(&instances.InstanceList, detailURL)
-		if err != nil {
-			log.Fatal(err)
+		source := instances.FindFastest(detailURL)
+		if source.Error != nil {
+			log.Fatal(source.Error)
 		}
 		// fmt.Println("Requesting " + source.FastestURL)
 		defer source.Resp.Body.Close()
@@ -269,9 +181,9 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside playlistCmd Run with args: %v\n", args)
 		playlistURL := "/api/v1/playlists/" + args[0]
-		source, err := instances.FindFastest(&instances.InstanceList, playlistURL)
-		if err != nil {
-			log.Fatal(err)
+		source := instances.FindFastest(playlistURL)
+		if source.Error != nil {
+			log.Fatal(source.Error)
 		}
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)
@@ -285,7 +197,6 @@ to quickly create a Cobra application.`,
 		pl.Vlc = "http://www.videolan.org/vlc/playlist/ns/0/"
 		pl.Version = "1"
 		pl.Title = "Playlist"
-		// pl.Extension.Application = "http://www.videolan.org/vlc/playlist/0"
 		Tracks := []vlc.Track{}
 		Items := []vlc.ExtensionItem{}
 		if len(res.Videos) > 0 {
@@ -298,11 +209,6 @@ to quickly create a Cobra application.`,
 			fmt.Println("Total videos: ", len(playlists))
 			flags := []string{
 				"--network-caching=1000",
-				// "--video-title=" + res.Title,
-				// "--meta-title=" + res.Title,
-				// "--meta-artist=" + res.Author,
-				// "--meta-author=" + res.Author,
-				// "--input-title-format=" + res.Title,
 			}
 			for i, v := range playlists {
 				id := fmt.Sprint(i)

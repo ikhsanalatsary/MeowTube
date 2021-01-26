@@ -127,9 +127,9 @@ region: ISO 3166 country code (default: "US")`,
 			query += "&features=" + features
 		}
 		fmt.Println("query: ", query)
-		source, err := instances.FindFastest(&instances.InstanceList, "/api/v1/search"+query)
-		if err != nil {
-			log.Fatal(err)
+		source := instances.FindFastest("/api/v1/search" + query)
+		if source.Error != nil {
+			log.Fatal(source.Error)
 		}
 		fmt.Println("Source: " + source.FastestURL)
 		defer source.Resp.Body.Close()

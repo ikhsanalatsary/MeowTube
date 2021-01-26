@@ -68,9 +68,9 @@ to quickly create a Cobra application.`,
 			}
 		}
 		fmt.Println("query: ", query)
-		source, err := instances.FindFastest(&instances.InstanceList, "/api/v1/trending"+query)
-		if err != nil {
-			log.Fatal(err)
+		source := instances.FindFastest("/api/v1/trending" + query)
+		if source.Error != nil {
+			log.Fatal(source.Error)
 		}
 		fmt.Println("Source: " + source.FastestURL)
 		// resp, err := http.Get(source.FastestURL + "/api/v1/trending" + query)

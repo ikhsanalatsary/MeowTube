@@ -42,7 +42,7 @@ var resolutions = map[string]string{
 
 // playCmd represents the play command
 var playCmd = &cobra.Command{
-	Use:   "play",
+	Use:   "play YoutubeURL",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -50,18 +50,15 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Args: cobra.MaximumNArgs(2),
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("VLC => ", VLC.GetVlc())
-		if len(args) > 0 {
-			if len(args) == 1 {
-				fmt.Println("No Command")
-			} else if len(args) == 2 {
-				fmt.Println("Inside Play")
-			}
-		} else {
-			fmt.Println("No Command")
+		videoID := args[0]
+		if interfaces.IsValidYoutubeURL(args[0]) {
+			videoID = interfaces.GetVideoIdFrom(args[0])
 		}
+		fmt.Println(videoID)
+		videoCmd.Run(cmd, []string{videoID})
 	},
 }
 
@@ -77,7 +74,11 @@ to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside videoCmd Run with args: %v\n", args)
-		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
+		videoID := args[0]
+		if interfaces.IsValidYoutubeURL(args[0]) {
+			videoID = interfaces.GetVideoIdFrom(args[0])
+		}
+		detailURL := "/api/v1/videos/" + videoID + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
 		source := instances.FindFastest(detailURL)
 		if source.Error != nil {
 			log.Fatal(source.Error)
@@ -90,12 +91,14 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 		flags := []string{
+			"--network-caching=1000",
 			"--video-title=" + res.Title,
 			"--meta-title=" + res.Title,
 			"--meta-artist=" + res.Author,
 			"--meta-author=" + res.Author,
 			"--meta-genre=" + res.Genre,
 			"--input-title-format=" + res.Title,
+			"--duration=" + fmt.Sprint(res.LengthSeconds),
 			res.FormatStreams[0].URL,
 		}
 		if resolution != "" {
@@ -134,7 +137,11 @@ to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("Inside audioCmd Run with args: %v\n", args)
-		detailURL := "/api/v1/videos/" + args[0] + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
+		videoID := args[0]
+		if interfaces.IsValidYoutubeURL(args[0]) {
+			videoID = interfaces.GetVideoIdFrom(args[0])
+		}
+		detailURL := "/api/v1/videos/" + videoID + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
 		source := instances.FindFastest(detailURL)
 		if source.Error != nil {
 			log.Fatal(source.Error)
@@ -147,12 +154,14 @@ to quickly create a Cobra application.`,
 			log.Fatal(err)
 		}
 		flags := []string{
+			"--network-caching=1000",
 			"--video-title=" + res.Title,
 			"--meta-title=" + res.Title,
 			"--meta-artist=" + res.Author,
 			"--meta-author=" + res.Author,
 			"--meta-genre=" + res.Genre,
 			"--input-title-format=" + res.Title,
+			"--duration=" + fmt.Sprint(res.LengthSeconds),
 		}
 		if len(res.AdaptiveFormats) > 1 {
 			for _, v := range res.AdaptiveFormats {

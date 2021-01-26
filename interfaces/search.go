@@ -34,4 +34,5 @@ const (
 	ChannelType  Type = "channel"
 	PlaylistType Type = "playlist"
 	VideoType    Type = "video"
+	ShortVideo   Type = "shortVideo"
 )

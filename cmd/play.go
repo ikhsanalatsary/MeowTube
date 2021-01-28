@@ -48,23 +48,21 @@ var playCmd = &cobra.Command{
 The difference with video commnad is, this command not supported any options`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("VLC => ", VLC.GetVlc())
 		videoID := args[0]
 		if interfaces.IsValidYoutubeURL(args[0]) {
 			videoID = interfaces.GetVideoIdFrom(args[0])
 		}
-		fmt.Println(videoID)
 		videoCmd.Run(cmd, []string{videoID})
 	},
 }
 
 var videoCmd = &cobra.Command{
-	Use:   "video [--fullscreen, --resolution] :videoId",
+	Use:   "video videoId",
 	Short: "To play YouTube video",
 	Long:  `This command requires videoID or youtube url with optional options`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Inside videoCmd Run with args: %v\n", args)
+		fmt.Println("Request video...")
 		videoID := args[0]
 		if interfaces.IsValidYoutubeURL(args[0]) {
 			videoID = interfaces.GetVideoIdFrom(args[0])
@@ -100,7 +98,6 @@ var videoCmd = &cobra.Command{
 				}
 				for _, v := range res.AdaptiveFormats {
 					if v.Container != nil && *v.Container == interfaces.Webm && v.Resolution != nil && string(*v.Resolution) == resolution && *v.Encoding == "vp9" {
-						fmt.Println("v.container")
 						flags[len(flags)-1] = v.URL
 					}
 				}
@@ -122,7 +119,7 @@ var audioCmd = &cobra.Command{
 	Long:  `This command requires videoID or youtube url without options`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Inside audioCmd Run with args: %v\n", args)
+		fmt.Println("Request audio...")
 		videoID := args[0]
 		if interfaces.IsValidYoutubeURL(args[0]) {
 			videoID = interfaces.GetVideoIdFrom(args[0])
@@ -174,7 +171,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Inside playlistCmd Run with args: %v\n", args)
+		fmt.Println("Request playlists...")
 		playlistURL := "/api/v1/playlists/" + args[0]
 		source := instances.FindFastest(playlistURL)
 		if source.Error != nil {
@@ -195,7 +192,6 @@ to quickly create a Cobra application.`,
 		Tracks := []vlc.Track{}
 		Items := []vlc.ExtensionItem{}
 		if len(res.Videos) > 0 {
-			fmt.Println("\n Requesting all playlists with " + source.FastestURL + "...")
 			playlists := instances.RequestAllPlaylist(source.FastestURL, res.Videos)
 			if len(playlists) == 0 {
 				fmt.Println("Requested videos not available!")

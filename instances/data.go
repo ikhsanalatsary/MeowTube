@@ -3,7 +3,6 @@ package instances
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -122,7 +121,6 @@ func FindInstanceList() (urls []string, err error) {
 				for _, v := range resp.Psp.Monitors {
 					if v.StatusClass == StatusSuccess {
 						if v.Name != "api.invidious.io" && v.Name != "invidious.io" && v.Name != "invidio.us" && v.Name != "invidious.snopyta.org" && v.Name != "invidious.fdn.fr" && v.Name != "yewtu.be" {
-							fmt.Println("Instance: ", v.Name)
 							instanceURLs = append(instanceURLs, "https://"+v.Name)
 						}
 					}

@@ -62,7 +62,7 @@ region: ISO 3166 country code (default: "US")`,
 				query += "?type=" + trendingType
 			}
 		}
-		fmt.Println("query: ", query)
+		// fmt.Println("query: ", query)
 		source := instances.FindFastest("/api/v1/trending" + query)
 		if source.Error != nil {
 			log.Fatal(source.Error)

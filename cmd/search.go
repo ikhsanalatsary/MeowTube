@@ -121,12 +121,12 @@ region: ISO 3166 country code (default: "US")`,
 			}
 			query += "&features=" + features
 		}
-		fmt.Println("query: ", query)
+		// fmt.Println("query: ", query)
 		source := instances.FindFastest("/api/v1/search" + query)
 		if source.Error != nil {
 			log.Fatal(source.Error)
 		}
-		fmt.Println("Source: " + source.FastestURL)
+		// fmt.Println("Source: " + source.FastestURL)
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)
 		if err != nil {

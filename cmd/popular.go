@@ -36,7 +36,6 @@ var popularCmd = &cobra.Command{
 		if source.Error != nil {
 			log.Fatal(source.Error)
 		}
-		fmt.Println("Source: " + source.FastestURL)
 		// resp, err := http.Get(source.FastestURL + "/api/v1/trending" + query)
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)

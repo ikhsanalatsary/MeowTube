@@ -1,7 +1,6 @@
 package interfaces
 
 import (
-	"fmt"
 	"log"
 	"net/url"
 	"strings"
@@ -21,7 +20,7 @@ func IsValidYoutubeURL(toTest string) bool {
 	}
 
 	u, err := url.Parse(toTest)
-	fmt.Println("u", u.Path)
+	// fmt.Println("u", u.Path)
 	if err != nil || u.Scheme == "" || u.Host == "" {
 		return false
 	}

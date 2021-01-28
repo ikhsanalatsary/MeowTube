@@ -25,11 +25,9 @@ func IsValidYoutubeURL(toTest string) bool {
 	if err != nil || u.Scheme == "" || u.Host == "" {
 		return false
 	}
+	_, ok := YoutubeURL[u.Host]
 
-	if _, ok := YoutubeURL[u.Host]; !ok {
-		return false
-	}
-	return true
+	return ok
 }
 
 // GetVideoIdFrom youtube url

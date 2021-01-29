@@ -30,6 +30,7 @@ var VLC = Vlc.New()
 
 // Version of package
 var Version string
+var CheckVersion bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -41,6 +42,10 @@ variable to the "$PATH" on your machine`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
+		if CheckVersion {
+			fmt.Println(Version)
+			os.Exit(0)
+		}
 		fmt.Println("Meowtube " + Version + " developed by ikhsanalatsary<https://ikhsan.dev>")
 	},
 }
@@ -66,7 +71,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().StringP("version", "v", Version, "Meowtube current version")
+	rootCmd.Flags().BoolVarP(&CheckVersion, "version", "v", false, "See neowtube current version")
 }
 
 // initConfig reads in config file and ENV variables if set.

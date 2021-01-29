@@ -24,7 +24,7 @@ jobs:
         go-version: 1.15
 
     - name: Build
-      run: mkdir -p ./output-${{ matrix.goos }}-${{ matrix.goarch }} && env GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o ./output-${{ matrix.goos }}-${{ matrix.goarch }}
+      run: mkdir -p ./output-${{ matrix.goos }}-${{ matrix.goarch }} && env GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags "-X main.Version=v1.0.0-beta" -o ./output-${{ matrix.goos }}-${{ matrix.goarch }}
     
     - name: 'Tar files'
       run: tar -cvf ${{ matrix.goos }}-${{ matrix.goarch }}.tar ./output-${{ matrix.goos }}-${{ matrix.goarch }}

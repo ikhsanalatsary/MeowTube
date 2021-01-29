@@ -17,6 +17,9 @@ package main
 
 import "github.com/ikhsanalatsary/MeowTube/cmd"
 
+var Version string
+
 func main() {
+	cmd.Version = Version
 	cmd.Execute()
 }

@@ -41,7 +41,7 @@ variable to the "$PATH" on your machine`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Meowtube developed by ikhsanalatsary<https://ikhsan.dev>")
+		fmt.Println("Meowtube " + Version + " developed by ikhsanalatsary<https://ikhsan.dev>")
 	},
 }
 

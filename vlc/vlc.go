@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"runtime"
 
@@ -32,6 +33,7 @@ func New() *VideoLAN {
 
 //  Execute asd
 func (v *VideoLAN) Execute(args ...string) (stdOut string, stdErr string, err error) {
+	fmt.Println("Opening VLC...")
 	cmd := exec.Command(v.vlc, args...)
 
 	var stdout bytes.Buffer
@@ -40,7 +42,10 @@ func (v *VideoLAN) Execute(args ...string) (stdOut string, stdErr string, err er
 	cmd.Stderr = &stderr
 
 	err = cmd.Run()
-	fmt.Println(err)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	stdOut, stdErr = stdout.String(), stderr.String()
 	return
 }

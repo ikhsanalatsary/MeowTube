@@ -32,13 +32,29 @@ var audioOnly bool
 var fullscreen bool
 var resolution string
 var resolutions = map[string]string{
-	"144p":  "144p",
-	"240p":  "240p",
-	"360p":  "360p",
-	"480p":  "480p",
-	"720p":  "720p",
-	"1080p": "1080p",
+	"144p":    "144p",
+	"240p":    "240p",
+	"360p":    "360p",
+	"480p":    "480p",
+	"720p":    "720p",
+	"720p60":  "720p60",
+	"1080p":   "1080p",
+	"1080p60": "1080p60",
 }
+
+var audioFormat string
+var videoFormat string
+
+// var encodingFormat string
+
+// Audio format
+// - m4a
+// - webm
+
+// Video format
+// - mp4
+// - webm
+// -
 
 // playCmd represents the play command
 var playCmd = &cobra.Command{
@@ -91,21 +107,31 @@ var videoCmd = &cobra.Command{
 			res.FormatStreams[0].URL,
 		}
 		if resolution != "" {
+			var message string
 			if len(res.AdaptiveFormats) > 1 {
 				if _, ok := resolutions[string(resolution)]; !ok {
 					fmt.Println("Invalid resolution")
 					os.Exit(1)
 				}
 				for _, v := range res.AdaptiveFormats {
-					if v.Container != nil && *v.Container == interfaces.Webm && v.Resolution != nil && string(*v.Resolution) == resolution && *v.Encoding == "vp9" {
+					if v.Container != nil && string(*v.Container) == videoFormat && v.QualityLabel != nil && string(*v.QualityLabel) == resolution {
+						fmt.Println("resolution = ", *v.QualityLabel)
 						flags[len(flags)-1] = v.URL
+						message = ""
+						break
+					} else {
+						message = "Unable to find resolution. Default resolution used as a fallback!"
 					}
 				}
-				flags = append(flags, ":input-slave="+res.AdaptiveFormats[0].URL, ":network-caching=1000")
+				if message == "" {
+					flags = append(flags, ":input-slave="+res.AdaptiveFormats[0].URL, ":network-caching=1000")
+				} else {
+					fmt.Println(message)
+				}
 			}
 		}
 		if fullscreen {
-			println("fullscreen")
+			// println("fullscreen")
 			flags = append(flags, "--fullscreen")
 		}
 		// fmt.Println(strings.Join(flags, " "))
@@ -114,7 +140,7 @@ var videoCmd = &cobra.Command{
 }
 
 var audioCmd = &cobra.Command{
-	Use:   "audio [no options!] :videoId",
+	Use:   "audio :videoId",
 	Short: "To play audio only",
 	Long:  `This command requires videoID or youtube url without options`,
 	Args:  cobra.MinimumNArgs(1),
@@ -148,8 +174,9 @@ var audioCmd = &cobra.Command{
 		}
 		if len(res.AdaptiveFormats) > 1 {
 			for _, v := range res.AdaptiveFormats {
-				if strings.Contains(v.Type, "audio") && string(*v.Container) == string(interfaces.M4A) {
+				if strings.Contains(v.Type, "audio") && string(*v.Container) == audioFormat {
 					flags = append(flags, v.URL)
+					break
 				}
 			}
 		} else {
@@ -214,7 +241,7 @@ to quickly create a Cobra application.`,
 					if audioOnly {
 						if len(v.AdaptiveFormats) > 1 {
 							for _, a := range v.AdaptiveFormats {
-								if strings.Contains(a.Type, "audio") && string(*a.Container) == string(interfaces.M4A) {
+								if strings.Contains(a.Type, "audio") && string(*a.Container) == audioFormat {
 									trEx := vlc.TrackExtension{
 										Application: "http://www.videolan.org/vlc/playlist/0",
 										ID:          id,
@@ -232,6 +259,7 @@ to quickly create a Cobra application.`,
 										Tid: id,
 									}
 									Items = append(Items, exItem)
+									break
 									// flags = append(flags, a.URL, ":video-title="+v.Title, ":meta-title="+v.Title, ":meta-artist="+v.Author, ":meta-author="+v.Title)
 								}
 							}
@@ -312,7 +340,10 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// playCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	videoCmd.Flags().BoolVarP(&fullscreen, "fullscreen", "f", false, "Fullscreen video output (default disabled)")
-	videoCmd.Flags().StringVarP(&resolution, "resolution", "r", "", "Select high resolution streaming 144p, 240p, 360p, 480p, 720p, 1080p  (default 360p)")
+	videoCmd.Flags().BoolVarP(&fullscreen, "fullscreen", "f", false, "Fullscreen video output (default \"disabled\")")
+	videoCmd.Flags().StringVarP(&resolution, "resolution", "r", "", "Select high resolution streaming 144p, 240p, 360p, 480p, 720p, 720p60, 1080p, 1080p60  (default \"360p\")")
+	videoCmd.Flags().StringVarP(&videoFormat, "format", "F", string(interfaces.Mp4), "Select video format streaming mp4, webm (default mp4)")
 	playlistCmd.Flags().BoolVarP(&audioOnly, "audio-only", "a", false, "Play the playlist in audio format only")
+	playlistCmd.Flags().StringVarP(&audioFormat, "format", "F", string(interfaces.M4A), "Select audio format streaming m4a, webm")
+	audioCmd.Flags().StringVarP(&audioFormat, "format", "F", string(interfaces.M4A), "Select audio format streaming m4a, webm")
 }

@@ -46,3 +46,12 @@ End with an example of getting some data out of the system or using it for a lit
 ## Usage <a name = "usage"></a>
 
 Add notes about how to use the system.
+
+## ✍️ Authors <a name = "authors"></a>
+
+- [@ikhsanalatsary](https://github.com/ikhsanalatsary) - Idea & Initial work
+
+## 🎉 Acknowledgements <a name = "acknowledgement"></a>
+
+- Inspired by [ohmyzsh/spotify](https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/osx/spotify)
+- Using [Invidious APIs](https://github.com/iv-org/invidious)

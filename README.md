@@ -39,7 +39,7 @@ vlc
 
 ### Installing
 
-1. Downloand MeowTube via [release page](https://github.com/ikhsanalatsary/MeowTube/releases)
+1. Download MeowTube via [release page](https://github.com/ikhsanalatsary/MeowTube/releases)
 2. Choose which target OS do you use
 3. Extract the downloaded file
 4. Move the file to any folder what you want (OPTIONAL)

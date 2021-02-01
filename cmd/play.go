@@ -76,7 +76,7 @@ var videoCmd = &cobra.Command{
 	Use:   "video videoId",
 	Short: "To play YouTube video",
 	Long:  `This command requires videoID or youtube url with optional options`,
-	Args:  cobra.MinimumNArgs(1),
+	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Request video...")
 		videoID := args[0]
@@ -143,7 +143,7 @@ var audioCmd = &cobra.Command{
 	Use:   "audio :videoId",
 	Short: "To play audio only",
 	Long:  `This command requires videoID or youtube url without options`,
-	Args:  cobra.MinimumNArgs(1),
+	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Request audio...")
 		videoID := args[0]
@@ -188,15 +188,9 @@ var audioCmd = &cobra.Command{
 }
 
 var playlistCmd = &cobra.Command{
-	Use:   "playlist [no options!] :playlistId",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Args: cobra.MinimumNArgs(1),
+	Use:   "playlist :playlistId",
+	Short: "To play all videos from YouTube playlist",
+	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Request playlists...")
 		playlistURL := "/api/v1/playlists/" + args[0]

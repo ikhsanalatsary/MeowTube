@@ -1,6 +1,6 @@
 # MeowTube
 
-## YouTube client on your terminal
+### YouTube client on your terminal
 
 ## Table of Contents
 
@@ -11,41 +11,84 @@
 
 ## About <a name = "about"></a>
 
-Write about 1-2 paragraphs describing the purpose of your project.
+MeowTube is a CLI (Command Line Interface) to interact with youtube videos or audios and easy to play it via VLC. No need any account to use it.
 
 ## Getting Started <a name = "getting_started"></a>
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+First, make sure VLC already installed on our machine.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them.
+1. [VLC Media Player](https://www.videolan.org/vlc/) Installed
+2. Register VLC (location where VLC installed) to your PATH variable
+3. for windows user, better to use [cmder](https://cmder.net), ANSI color support by default
+4. Check everything is good, type `vlc` on your terminal / cmd.
 
 ```
-Give examples
+vlc
 ```
+
+#### Register VLC to the PATH
+
+- Linux, no need extra step
+- Mac OS / OSX, See [Official Doc](https://wiki.videolan.org/MacOS/#Command_line) and the export that location to your `.zshrc` or `.profile`
+  ```
+  echo export PATH="/Applications/VLC.app/Contents/MacOS/VLC" >> ~/.zshrc && source ~/.zshrc
+  ```
+- Windows, see [Official Doc](https://wiki.videolan.org/Windows/#Step_2:_Command_Line_Startup) and then copy that directory location to your PATH on your environment variable ([see reference](https://stackoverflow.com/a/44272417)).
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
+1. Downloand MeowTube via [release page](https://github.com/ikhsanalatsary/MeowTube/releases)
+2. Choose which target OS do you use
+3. Extract the downloaded file
+4. Move the file to any folder what you want (OPTIONAL)
+5. Register MeowTube to your PATH variable (choose where meowtube is located)
+6. Create an alias for MeowTube (OPTIONAL)
 
-Say what the step will be
+#### Register MeowTube to the PATH
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo.
+- unix based(linux & macos). export to `.zshrc` or `.profile`
+  ```
+  echo export PATH="MEOWTUBE_LOCATION_FOLDER/meowtube" >> ~/.zshrc && source ~/.zshrc
+  ```
+- Windows, copy the directory location to your PATH on your environment variable ([see reference](https://stackoverflow.com/a/44272417))
 
 ## Usage <a name = "usage"></a>
 
-Add notes about how to use the system.
+Check evertyhing is good. Type on your terminal
+
+```
+meowtube
+```
+
+or
+
+```
+meowtube --help
+```
+
+### Command Line Arguments
+
+| Argument | Description                                          |
+| -------- | ---------------------------------------------------- |
+| help     | Help about any command                               |
+| play     | To play YouTube video                                |
+| popular  | To see popular videos on YouTube                     |
+| search   | To search for videos according to certain characters |
+| trending | To see trending videos on YouTube                    |
+
+#### Play Arguments
+
+| Argument    | Description                                                 |
+| ----------- | ----------------------------------------------------------- |
+| :YoutubeURL | Valid YouTube video url e.g: `https://youtu.be/0FZZJHuQMFs` |
+| :videoId    | Valid Youtube videoId e.g: `"tMzjKjV6r_w"`                  |
+| audio       | To play audio only                                          |
+| playlist    | To play all videos from YouTube playlist                    |
+| video       | To play YouTube video                                       |
+
+**NOTE:** Every argument has `--help` flag to see their specific usage
 
 ## ✍️ Authors <a name = "authors"></a>
 

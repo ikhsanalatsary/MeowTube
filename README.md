@@ -11,29 +11,29 @@
 
 ## About <a name = "about"></a>
 
-MeowTube is a CLI (Command Line Interface) to interact with youtube videos or audios and easy to play it via VLC. No need any account to use it.
+MeowTube is a CLI (Command Line Interface) to interact with youtube videos or audios and easy to play it via VLC. No need any account to use it. 
 
 ## Getting Started <a name = "getting_started"></a>
 
-First, make sure VLC already installed on our machine.
+First, make sure VLC already installed on your machine.
 
 ### Prerequisites
 
 1. [VLC Media Player](https://www.videolan.org/vlc/) Installed
-2. Register VLC (location where VLC installed) to your PATH variable
-3. for windows user, better to use [cmder](https://cmder.net), ANSI color support by default
+2. Register VLC (location where VLC installed) to your `PATH` variable
+3. for windows user, better to use [cmder](https://cmder.net), ANSI color supported by default
 4. Check everything is good, type `vlc` on your terminal / cmd.
 
-```
-vlc
-```
+   ```
+   vlc
+   ```
 
 #### Register VLC to the PATH
 
 - Linux, no need extra step
-- Mac OS / OSX, See [Official Doc](https://wiki.videolan.org/MacOS/#Command_line) and the export that location to your `.zshrc` or `.profile`
+- Mac OS / OSX, See [Official Doc](https://wiki.videolan.org/MacOS/#Command_line) and then export that location to your `.zshrc` or `.bashrc`
   ```
-  echo export PATH="/Applications/VLC.app/Contents/MacOS/VLC" >> ~/.zshrc && source ~/.zshrc
+  echo export PATH=$PATH:/Applications/VLC.app/Contents/MacOS >> ~/.zshrc && source ~/.zshrc
   ```
 - Windows, see [Official Doc](https://wiki.videolan.org/Windows/#Step_2:_Command_Line_Startup) and then copy that directory location to your PATH on your environment variable ([see reference](https://stackoverflow.com/a/44272417)).
 
@@ -43,14 +43,14 @@ vlc
 2. Choose which target OS do you use
 3. Extract the downloaded file
 4. Move the file to any folder what you want (OPTIONAL)
-5. Register MeowTube to your PATH variable (choose where meowtube is located)
+5. Register MeowTube to your `PATH` variable (choose where meowtube is located)
 6. Create an alias for MeowTube (OPTIONAL)
 
 #### Register MeowTube to the PATH
 
-- unix based(linux & macos). export to `.zshrc` or `.profile`
+- unix based(linux & macos). export to `.zshrc` or `.bashrc`
   ```
-  echo export PATH="MEOWTUBE_LOCATION_FOLDER/meowtube" >> ~/.zshrc && source ~/.zshrc
+  echo export PATH=$PATH:$HOME/MEOWTUBE_LOCATION_FOLDER >> ~/.zshrc && source ~/.zshrc
   ```
 - Windows, copy the directory location to your PATH on your environment variable ([see reference](https://stackoverflow.com/a/44272417))
 

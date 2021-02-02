@@ -56,7 +56,7 @@ First, make sure VLC already installed on your machine.
 
 ## Usage <a name = "usage"></a>
 
-Check evertyhing is good. Type on your terminal
+Check everything is good. Type on your terminal
 
 ```
 meowtube

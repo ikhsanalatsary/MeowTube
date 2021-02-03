@@ -106,6 +106,16 @@ const (
 	HTTPS Type = "HTTP(s)"
 )
 
+var excludeNames = map[string]string{
+	"api.invidious.io":      "api.invidious.io",
+	"invidious.io":          "invidious.io",
+	"invidio.us":            "invidio.us",
+	"invidious.fdn.fr":      "invidious.fdn.fr",
+	"invidious.kavin.rocks": "invidious.kavin.rocks",
+	"invidious.snopyta.org": "invidious.snopyta.org",
+	"yewtu.be":              "yewtu.be",
+}
+
 func FindInstanceList() (urls []string, err error) {
 	var data []byte
 	var resp ServerInstanceList
@@ -120,7 +130,7 @@ func FindInstanceList() (urls []string, err error) {
 			if resp.Status == "ok" {
 				for _, v := range resp.Psp.Monitors {
 					if v.StatusClass == StatusSuccess {
-						if v.Name != "api.invidious.io" && v.Name != "invidious.io" && v.Name != "invidio.us" && v.Name != "invidious.snopyta.org" && v.Name != "invidious.fdn.fr" && v.Name != "yewtu.be" {
+						if _, exist := excludeNames[v.Name]; !exist {
 							instanceURLs = append(instanceURLs, "https://"+v.Name)
 						}
 					}

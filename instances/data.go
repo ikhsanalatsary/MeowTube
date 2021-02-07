@@ -114,6 +114,7 @@ var excludeNames = map[string]string{
 	"invidious.kavin.rocks": "invidious.kavin.rocks",
 	"invidious.snopyta.org": "invidious.snopyta.org",
 	"yewtu.be":              "yewtu.be",
+	"ytprivate.com":         "ytprivate.com",
 }
 
 func FindInstanceList() (urls []string, err error) {

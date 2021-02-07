@@ -71,7 +71,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	// rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().BoolVarP(&CheckVersion, "version", "v", false, "See neowtube current version")
+	rootCmd.Flags().BoolVarP(&CheckVersion, "version", "v", false, "See meowtube current version")
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/corpix/uarand"
 	"github.com/ikhsanalatsary/MeowTube/interfaces"
 )
 
@@ -17,7 +18,14 @@ func RequestAllPlaylist(url string, videoPlaylists []*interfaces.VideoElement) [
 		wg.Add(1)
 		go func(i int, playlist *interfaces.VideoElement) {
 			// fmt.Println("VideoId ", playlist.VideoID)
-			res, err := http.Get(url + "/api/v1/videos/" + playlist.VideoID)
+			jar := NewJar()
+			client := &http.Client{Jar: jar}
+			req, _ := http.NewRequest("GET", url+"/api/v1/videos/"+playlist.VideoID, nil)
+			req.Header.Add("Upgrade-Insecure-Requests", "1")
+			req.Header.Add("User-Agent", uarand.GetRandom())
+			req.Header.Add("Origin", url)
+			// req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+			res, err := client.Do(req)
 			if err == nil {
 				if res.StatusCode >= 200 && res.StatusCode < 400 {
 					defer res.Body.Close()

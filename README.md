@@ -33,7 +33,7 @@ First, make sure VLC already installed on your machine.
 - Linux, no need extra step
 - Mac OS / OSX, See [Official Doc](https://wiki.videolan.org/MacOS/#Command_line) and then export that location to your `.zshrc` or `.bashrc`
   ```
-  echo export PATH=$PATH:/Applications/VLC.app/Contents/MacOS >> ~/.zshrc && source ~/.zshrc
+  echo 'export PATH="$PATH:/Applications/VLC.app/Contents/MacOS"' >> ~/.zshrc && source ~/.zshrc
   ```
 - Windows, see [Official Doc](https://wiki.videolan.org/Windows/#Step_2:_Command_Line_Startup) and then copy that directory location to your PATH on your environment variable ([see reference](https://stackoverflow.com/a/44272417)).
 
@@ -50,7 +50,7 @@ First, make sure VLC already installed on your machine.
 
 - unix based(linux & macos). export to `.zshrc` or `.bashrc`
   ```
-  echo export PATH=$PATH:$HOME/MEOWTUBE_LOCATION_FOLDER >> ~/.zshrc && source ~/.zshrc
+  echo 'export PATH="$PATH:$HOME/MEOWTUBE_LOCATION_FOLDER"' >> ~/.zshrc && source ~/.zshrc
   ```
 - Windows, copy the directory location to your PATH on your environment variable ([see reference](https://stackoverflow.com/a/44272417))
 

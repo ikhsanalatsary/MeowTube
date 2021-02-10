@@ -1,6 +1,17 @@
 # MeowTube
 
 ### YouTube client on your terminal
+[![asciicast](https://asciinema.org/a/hB2kKohwKCnwtLggCG8sQdsAl.svg)](https://asciinema.org/a/hB2kKohwKCnwtLggCG8sQdsAl)
+
+[![asciicast](https://asciinema.org/a/Mt26r1K6J3yYO1TvBHlE0B3HT.svg)](https://asciinema.org/a/Mt26r1K6J3yYO1TvBHlE0B3HT)
+
+[![asciicast](https://asciinema.org/a/CrFSO70LHbRwumVaADsuKwCWv.svg)](https://asciinema.org/a/CrFSO70LHbRwumVaADsuKwCWv)
+
+[![asciicast](https://asciinema.org/a/5OVUFx4F3U7Jqg7ZC45twcCO7.svg)](https://asciinema.org/a/5OVUFx4F3U7Jqg7ZC45twcCO7)
+
+[![asciicast](https://asciinema.org/a/OflMY6x4ICCZUW1AgMq1mDkrj.svg)](https://asciinema.org/a/OflMY6x4ICCZUW1AgMq1mDkrj)
+
+[![asciicast](https://asciinema.org/a/PxvEFf8jMpFqYLyRgbbAcLzMG.svg)](https://asciinema.org/a/PxvEFf8jMpFqYLyRgbbAcLzMG)
 
 ## Table of Contents
 

@@ -224,14 +224,14 @@ var playlistCmd = &cobra.Command{
 			}
 			for i, v := range playlists {
 				id := fmt.Sprint(i)
-				localOption := []string{
-					"video-title=" + v.Title,
-					"input-title-format=" + v.Title,
-					"meta-title=" + v.Title,
-					"meta-artist=" + v.Author,
-					"meta-author=" + v.Author,
-				}
 				if v != nil {
+					localOption := []string{
+						"video-title=" + v.Title,
+						"input-title-format=" + v.Title,
+						"meta-title=" + v.Title,
+						"meta-artist=" + v.Author,
+						"meta-author=" + v.Author,
+					}
 					if audioOnly {
 						if len(v.AdaptiveFormats) > 1 {
 							for _, a := range v.AdaptiveFormats {
@@ -280,6 +280,9 @@ var playlistCmd = &cobra.Command{
 							// flags = append(flags, v.FormatStreams[0].URL, ":video-title="+v.Title, ":meta-title="+v.Title, ":meta-artist="+v.Author, ":meta-author="+v.Title)
 						}
 					}
+				} else {
+					fmt.Println("Requested videos not available!")
+					os.Exit(1)
 				}
 			}
 			pl.TrackList = vlc.TrackList{

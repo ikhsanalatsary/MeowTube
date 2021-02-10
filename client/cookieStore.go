@@ -1,4 +1,4 @@
-package instances
+package client
 
 import (
 	"net/http"
@@ -22,8 +22,8 @@ func NewJar() *Jar {
 // on the jar's policy and implementation.
 func (jar *Jar) SetCookies(u *url.URL, cookies []*http.Cookie) {
 	jar.mtx.Lock()
+	defer jar.mtx.Unlock()
 	jar.cookies[u.Host] = cookies
-	jar.mtx.Unlock()
 }
 
 // Cookies returns the cookies to send in a request for the given URL.

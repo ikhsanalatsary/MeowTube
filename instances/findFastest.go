@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/corpix/uarand"
+	"github.com/ikhsanalatsary/MeowTube/client"
 )
 
 // FastestInstance is a response the fastest instance from FindFastest
@@ -33,7 +36,14 @@ func FindFastest(path string) FastestInstance {
 		mirrorURL := url
 		go func() {
 			start := time.Now()
-			res, err := http.Get(mirrorURL + path)
+			// hasCookie := true
+			req, _ := http.NewRequest("GET", mirrorURL+path, nil)
+			req.Header.Add("Upgrade-Insecure-Requests", "1")
+			req.Header.Add("User-Agent", uarand.GetRandom())
+			req.Header.Add("Origin", mirrorURL)
+			req.Header.Add("Accept", "*/*")
+			// req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+			res, err := client.Request.Do(req)
 			latency := time.Now().Sub(start) / time.Millisecond
 			urlChan <- mirrorURL
 			latencyChan <- latency

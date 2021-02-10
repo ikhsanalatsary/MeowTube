@@ -1,6 +1,7 @@
 # MeowTube
 
 ### YouTube client on your terminal
+![Example](./termtosvg_k3uvtc_0.svg)
 
 ## Table of Contents
 

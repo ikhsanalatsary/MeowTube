@@ -18,12 +18,12 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/ikhsanalatsary/MeowTube/instances"
 	"github.com/ikhsanalatsary/MeowTube/interfaces"
+	"github.com/ikhsanalatsary/MeowTube/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -65,22 +65,22 @@ region: ISO 3166 country code (default: "US")`,
 		// fmt.Println("query: ", query)
 		source := instances.FindFastest("/api/v1/trending" + query)
 		if source.Error != nil {
-			log.Fatal(source.Error)
+			logger.ThrowError(source.Error)
 		}
 		fmt.Println("Source: " + source.FastestURL)
 		// resp, err := http.Get(source.FastestURL + "/api/v1/trending" + query)
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		res, err := interfaces.UnmarshalVideo(data)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		m, err := res.Marshal()
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		// fmt.Println(string(m))
 		os.Stdout.Write(m)

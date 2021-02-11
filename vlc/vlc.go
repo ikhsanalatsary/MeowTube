@@ -3,12 +3,12 @@ package vlc
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"runtime"
 
 	exec2 "github.com/cli/safeexec"
+	"github.com/ikhsanalatsary/MeowTube/logger"
 )
 
 // VideoLAN struct
@@ -24,7 +24,7 @@ func New() *VideoLAN {
 	}
 	vlc, err := exec2.LookPath(v)
 	if err != nil {
-		log.Fatal(err)
+		logger.ThrowError(err)
 	}
 	return &VideoLAN{
 		vlc: vlc,

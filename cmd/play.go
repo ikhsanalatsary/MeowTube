@@ -18,12 +18,12 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/ikhsanalatsary/MeowTube/instances"
 	"github.com/ikhsanalatsary/MeowTube/interfaces"
+	"github.com/ikhsanalatsary/MeowTube/logger"
 	"github.com/ikhsanalatsary/MeowTube/vlc"
 	"github.com/spf13/cobra"
 )
@@ -86,14 +86,14 @@ var videoCmd = &cobra.Command{
 		detailURL := "/api/v1/videos/" + videoID + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
 		source := instances.FindFastest(detailURL)
 		if source.Error != nil {
-			log.Fatal(source.Error)
+			logger.ThrowError(source.Error)
 		}
 		// fmt.Println("Requesting " + source.FastestURL)
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)
 		res, err := interfaces.UnmarshalFormatStream(data)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		flags := []string{
 			"--network-caching=1000",
@@ -153,14 +153,14 @@ var audioCmd = &cobra.Command{
 		detailURL := "/api/v1/videos/" + videoID + "?fields=formatStreams,title,author,genre,adaptiveFormats,lengthSeconds"
 		source := instances.FindFastest(detailURL)
 		if source.Error != nil {
-			log.Fatal(source.Error)
+			logger.ThrowError(source.Error)
 		}
 		// fmt.Println("Requesting " + source.FastestURL)
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)
 		res, err := interfaces.UnmarshalFormatStream(data)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		flags := []string{
 			"--network-caching=1000",
@@ -196,13 +196,13 @@ var playlistCmd = &cobra.Command{
 		playlistURL := "/api/v1/playlists/" + args[0]
 		source := instances.FindFastest(playlistURL)
 		if source.Error != nil {
-			log.Fatal(source.Error)
+			logger.ThrowError(source.Error)
 		}
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)
 		res, err := interfaces.UnmarshalPlaylist(data)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		pl := &vlc.VLCPlaylist{}
 		pl.Xmlns = "http://xspf.org/ns/0/"
@@ -293,7 +293,7 @@ var playlistCmd = &cobra.Command{
 			}
 			tmpFile, err := ioutil.TempFile(os.TempDir(), "playlist-"+"*.xspf")
 			if err != nil {
-				log.Fatal("Cannot create temporary file", err)
+				logger.ThrowError("Cannot create temporary file", err)
 			}
 
 			fmt.Println("Created Temporary Playlist File: " + tmpFile.Name())
@@ -301,10 +301,10 @@ var playlistCmd = &cobra.Command{
 			// Example writing to the file
 			text, err := vlc.MarshalFrom(pl)
 			if err != nil {
-				log.Fatal("Failed to marshal from data", err)
+				logger.ThrowError("Failed to marshal from data", err)
 			}
 			if _, err = tmpFile.Write(text); err != nil {
-				log.Fatal("Failed to write to temporary file", err)
+				logger.ThrowError("Failed to write to temporary file", err)
 			}
 			flags = append(flags, tmpFile.Name())
 			// Remember to clean up the file afterwards
@@ -314,7 +314,7 @@ var playlistCmd = &cobra.Command{
 
 			// Close the file
 			if err := tmpFile.Close(); err != nil {
-				log.Fatal(err)
+				logger.ThrowError(err)
 			}
 		} else {
 			fmt.Println("No videos found!")

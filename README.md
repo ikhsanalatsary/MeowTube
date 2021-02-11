@@ -81,13 +81,14 @@ meowtube --help
 
 #### Play Arguments
 
-| Argument    | Description                                                 |
-| ----------- | ----------------------------------------------------------- |
-| :YoutubeURL | Valid YouTube video url e.g: `https://youtu.be/0FZZJHuQMFs` |
-| :videoId    | Valid Youtube videoId e.g: `"tMzjKjV6r_w"`                  |
-| audio       | To play audio only                                          |
-| playlist    | To play all videos from YouTube playlist                    |
-| video       | To play YouTube video                                       |
+| Argument    | Description                                                                         |
+| ----------- | ----------------------------------------------------------------------------------- |
+| :YoutubeURL | Valid YouTube video url e.g: `https://youtu.be/0FZZJHuQMFs`                         |
+| :videoId    | Valid Youtube videoId e.g: `"tMzjKjV6r_w"`                                          |
+| audio       | To play audio only                                                                  |
+| playlist    | To play all videos from YouTube playlist                                            |
+| list        | shorthand for playlist. To play all videos from YouTube playlist                    |
+| video       | To play YouTube video                                                               |
 
 **NOTE:** Every argument has `--help` flag to see their specific usage
 

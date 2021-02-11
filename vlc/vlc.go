@@ -3,7 +3,6 @@ package vlc
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"os/exec"
 	"runtime"
 
@@ -31,7 +30,7 @@ func New() *VideoLAN {
 	}
 }
 
-//  Execute asd
+// Execute vlc command with args
 func (v *VideoLAN) Execute(args ...string) (stdOut string, stdErr string, err error) {
 	fmt.Println("Opening VLC...")
 	cmd := exec.Command(v.vlc, args...)
@@ -43,8 +42,7 @@ func (v *VideoLAN) Execute(args ...string) (stdOut string, stdErr string, err er
 
 	err = cmd.Run()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		logger.ThrowError(err)
 	}
 	stdOut, stdErr = stdout.String(), stderr.String()
 	return

@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Abdul Fattah Ikhsan <ikhsannetwork@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -110,8 +110,7 @@ var videoCmd = &cobra.Command{
 			var message string
 			if len(res.AdaptiveFormats) > 1 {
 				if _, ok := resolutions[string(resolution)]; !ok {
-					fmt.Println("Invalid resolution")
-					os.Exit(1)
+					logger.ThrowError("Invalid resolution")
 				}
 				for _, v := range res.AdaptiveFormats {
 					if v.Container != nil && string(*v.Container) == videoFormat && v.QualityLabel != nil && string(*v.QualityLabel) == resolution {
@@ -180,8 +179,7 @@ var audioCmd = &cobra.Command{
 				}
 			}
 		} else {
-			fmt.Println("Cannot play stream")
-			os.Exit(1)
+			logger.ThrowError("Cannot play stream")
 		}
 		VLC.Execute(flags...)
 	},
@@ -215,8 +213,7 @@ var playlistCmd = &cobra.Command{
 		if len(res.Videos) > 0 {
 			playlists := instances.RequestAllPlaylist(source.FastestURL, res.Videos)
 			if len(playlists) == 0 {
-				fmt.Println("Requested videos not available!")
-				os.Exit(1)
+				logger.ThrowError("Requested videos not available!")
 			}
 			fmt.Println("Total videos: ", len(playlists))
 			flags := []string{
@@ -317,8 +314,7 @@ var playlistCmd = &cobra.Command{
 				logger.ThrowError(err)
 			}
 		} else {
-			fmt.Println("No videos found!")
-			os.Exit(1)
+			logger.ThrowError("No videos found!")
 		}
 	},
 }

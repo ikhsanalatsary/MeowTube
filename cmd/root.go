@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Abdul Fattah Ikhsan <ikhsannetwork@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ var VLC = Vlc.New()
 
 // Version of package
 var Version string
+
+// CheckVersion flag
 var CheckVersion bool
 
 // rootCmd represents the base command when called without any subcommands

@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Abdul Fattah Ikhsan <ikhsannetwork@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -53,8 +53,7 @@ region: ISO 3166 country code (default: "US")`,
 		}
 		if len(trendingType) > 0 {
 			if _, ok := trendingTypes[trendingType]; !ok {
-				fmt.Println("Invalid type")
-				os.Exit(1)
+				logger.ThrowError("Invalid type")
 			}
 			if strings.Contains(query, "?") {
 				query += "&type=" + trendingType
@@ -67,7 +66,6 @@ region: ISO 3166 country code (default: "US")`,
 		if source.Error != nil {
 			logger.ThrowError(source.Error)
 		}
-		fmt.Println("Source: " + source.FastestURL)
 		// resp, err := http.Get(source.FastestURL + "/api/v1/trending" + query)
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)

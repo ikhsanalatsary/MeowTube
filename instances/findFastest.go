@@ -49,11 +49,11 @@ func FindFastest(path string) FastestInstance {
 			latencyChan <- latency
 			if err == nil {
 				if res.StatusCode >= 200 && res.StatusCode < 400 {
-					// fmt.Print("Succeed request url: ", mirrorURL+path)
+					fmt.Print("Succeed request url: ", mirrorURL+path)
 					resp <- res
 					resError <- nil
 				} else {
-					// fmt.Println("Failed request url", mirrorURL+path)
+					fmt.Println("Failed request url", mirrorURL+path)
 					fmt.Println("statusCode: ", res.StatusCode)
 					resp <- nil
 					resError <- errors.New("Unable to request")

@@ -281,8 +281,7 @@ var playlistCmd = &cobra.Command{
 						}
 					}
 				} else {
-					fmt.Println("Requested videos not available!")
-					os.Exit(1)
+					continue
 				}
 			}
 			pl.TrackList = vlc.TrackList{

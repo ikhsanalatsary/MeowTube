@@ -59,7 +59,7 @@ func FindFastest(path string) FastestInstance {
 					resError <- errors.New("Unable to request")
 				}
 			} else {
-				// fmt.Println("Failed request url", mirrorURL+path)
+				fmt.Println("Failed request url", mirrorURL+path)
 				resp <- nil
 				resError <- err
 			}

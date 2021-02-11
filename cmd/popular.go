@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Abdul Fattah Ikhsan <ikhsannetwork@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"github.com/ikhsanalatsary/MeowTube/instances"
 	"github.com/ikhsanalatsary/MeowTube/interfaces"
+	"github.com/ikhsanalatsary/MeowTube/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -34,21 +34,21 @@ var popularCmd = &cobra.Command{
 		fmt.Println("Request popular...")
 		source := instances.FindFastest("/api/v1/popular")
 		if source.Error != nil {
-			log.Fatal(source.Error)
+			logger.ThrowError(source.Error)
 		}
 		// resp, err := http.Get(source.FastestURL + "/api/v1/trending" + query)
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		res, err := interfaces.UnmarshalVideo(data)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		m, err := res.Marshal()
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		// fmt.Println(string(m))
 		os.Stdout.Write(m)

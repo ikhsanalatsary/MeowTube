@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Abdul Fattah Ikhsan <ikhsannetwork@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 
 	url "net/url"
 
 	"github.com/ikhsanalatsary/MeowTube/instances"
 	"github.com/ikhsanalatsary/MeowTube/interfaces"
+	"github.com/ikhsanalatsary/MeowTube/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -85,8 +84,7 @@ region: ISO 3166 country code (default: "US")`,
 		}
 		if len(searchType) > 0 {
 			if _, ok := searchTypes[searchType]; !ok {
-				fmt.Println("Invalid type")
-				os.Exit(1)
+				logger.ThrowError("Invalid type")
 			}
 			query += "&type=" + searchType
 		}
@@ -95,50 +93,46 @@ region: ISO 3166 country code (default: "US")`,
 		}
 		if len(sort) > 0 {
 			if _, ok := sortBy[sort]; !ok {
-				fmt.Println("Invalid sort criteria")
-				os.Exit(1)
+				logger.ThrowError("Invalid sort criteria")
 			}
 			query += "&sort_by=" + sort
 		}
 		if len(date) > 0 {
 			if _, ok := searchDate[date]; !ok {
-				fmt.Println("Invalid date criteria")
-				os.Exit(1)
+				logger.ThrowError("Invalid date criteria")
 			}
 			query += "&date=" + date
 		}
 		if len(duration) > 0 {
 			if _, ok := durations[duration]; !ok {
-				fmt.Println("Invalid duration criteria")
-				os.Exit(1)
+				logger.ThrowError("Invalid duration criteria")
 			}
 			query += "&duration=" + duration
 		}
 		if len(features) > 0 {
 			if _, ok := searchDate[date]; !ok {
-				fmt.Println("Invalid date criteria")
-				os.Exit(1)
+				logger.ThrowError("Invalid date criteria")
 			}
 			query += "&features=" + features
 		}
 		// fmt.Println("query: ", query)
 		source := instances.FindFastest("/api/v1/search" + query)
 		if source.Error != nil {
-			log.Fatal(source.Error)
+			logger.ThrowError(source.Error)
 		}
 		// fmt.Println("Source: " + source.FastestURL)
 		defer source.Resp.Body.Close()
 		data, err := ioutil.ReadAll(source.Resp.Body)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		res, err := interfaces.UnmarshalSearch(data)
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		m, err := res.Marshal()
 		if err != nil {
-			log.Fatal(err)
+			logger.ThrowError(err)
 		}
 		os.Stdout.Write(m)
 	},

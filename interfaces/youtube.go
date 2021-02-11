@@ -1,9 +1,10 @@
 package interfaces
 
 import (
-	"log"
 	"net/url"
 	"strings"
+
+	"github.com/ikhsanalatsary/MeowTube/logger"
 )
 
 // YoutubeURL map valid url
@@ -34,7 +35,7 @@ func GetVideoIdFrom(youtubeURL string) string {
 	var videoID string
 	u, err := url.Parse(youtubeURL)
 	if err != nil {
-		log.Fatal(err)
+		logger.ThrowError(err)
 	}
 	q := u.Query()
 	videoID = q.Get("v")

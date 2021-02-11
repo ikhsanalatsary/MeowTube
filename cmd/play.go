@@ -185,142 +185,151 @@ var audioCmd = &cobra.Command{
 	},
 }
 
+func runPlaylist(cmd *cobra.Command, args []string) {
+	fmt.Println("Request playlists...")
+	playlistURL := "/api/v1/playlists/" + args[0]
+	source := instances.FindFastest(playlistURL)
+	if source.Error != nil {
+		logger.ThrowError(source.Error)
+	}
+	defer source.Resp.Body.Close()
+	data, err := ioutil.ReadAll(source.Resp.Body)
+	res, err := interfaces.UnmarshalPlaylist(data)
+	if err != nil {
+		logger.ThrowError(err)
+	}
+	pl := &vlc.VLCPlaylist{}
+	pl.Xmlns = "http://xspf.org/ns/0/"
+	pl.Text = "xmlns"
+	pl.Vlc = "http://www.videolan.org/vlc/playlist/ns/0/"
+	pl.Version = "1"
+	pl.Title = "Playlist"
+	Tracks := []vlc.Track{}
+	Items := []vlc.ExtensionItem{}
+	if len(res.Videos) > 0 {
+		playlists := instances.RequestAllPlaylist(source.FastestURL, res.Videos)
+		if len(playlists) == 0 {
+			logger.ThrowError("Requested videos not available!")
+		}
+		fmt.Println("Total videos: ", len(playlists))
+		flags := []string{
+			"--network-caching=1000",
+		}
+		for i, v := range playlists {
+			id := fmt.Sprint(i)
+			if v != nil {
+				localOption := []string{
+					"video-title=" + v.Title,
+					"input-title-format=" + v.Title,
+					"meta-title=" + v.Title,
+					"meta-artist=" + v.Author,
+					"meta-author=" + v.Author,
+				}
+				if audioOnly {
+					if len(v.AdaptiveFormats) > 1 {
+						for _, a := range v.AdaptiveFormats {
+							if strings.Contains(a.Type, "audio") && string(*a.Container) == audioFormat {
+								trEx := vlc.TrackExtension{
+									Application: "http://www.videolan.org/vlc/playlist/0",
+									ID:          id,
+									Option:      localOption,
+								}
+								tr := vlc.Track{
+									Location:  a.URL,
+									Extension: trEx,
+									Creator:   v.Author,
+									Title:     v.Title,
+									Duration:  fmt.Sprint(v.LengthSeconds),
+								}
+								Tracks = append(Tracks, tr)
+								exItem := vlc.ExtensionItem{
+									Tid: id,
+								}
+								Items = append(Items, exItem)
+								break
+								// flags = append(flags, a.URL, ":video-title="+v.Title, ":meta-title="+v.Title, ":meta-artist="+v.Author, ":meta-author="+v.Title)
+							}
+						}
+					}
+				} else {
+					if len(v.FormatStreams) > 0 {
+						trEx := vlc.TrackExtension{
+							Application: "http://www.videolan.org/vlc/playlist/0",
+							ID:          id,
+							Option:      localOption,
+						}
+						tr := vlc.Track{
+							Location:  v.FormatStreams[0].URL,
+							Extension: trEx,
+							Creator:   v.Author,
+							Title:     v.Title,
+							Duration:  fmt.Sprint(v.LengthSeconds),
+						}
+						Tracks = append(Tracks, tr)
+						exItem := vlc.ExtensionItem{
+							Tid: id,
+						}
+						Items = append(Items, exItem)
+						// flags = append(flags, v.FormatStreams[0].URL, ":video-title="+v.Title, ":meta-title="+v.Title, ":meta-artist="+v.Author, ":meta-author="+v.Title)
+					}
+				}
+			} else {
+				continue
+			}
+		}
+		pl.TrackList = vlc.TrackList{
+			Track: Tracks,
+		}
+		pl.Extension = vlc.Extension{
+			Application: "http://www.videolan.org/vlc/playlist/0",
+			Item:        Items,
+		}
+		tmpFile, err := ioutil.TempFile(os.TempDir(), "playlist-"+"*.xspf")
+		if err != nil {
+			logger.ThrowError("Cannot create temporary file", err)
+		}
+
+		fmt.Println("Created Temporary Playlist File: " + tmpFile.Name())
+
+		// Example writing to the file
+		text, err := vlc.MarshalFrom(pl)
+		if err != nil {
+			logger.ThrowError("Failed to marshal from data", err)
+		}
+		if _, err = tmpFile.Write(text); err != nil {
+			logger.ThrowError("Failed to write to temporary file", err)
+		}
+		flags = append(flags, tmpFile.Name())
+		// Remember to clean up the file afterwards
+		defer os.Remove(tmpFile.Name())
+		VLC.Execute(flags...)
+		fmt.Println("Deleting Temporary Playlist")
+
+		// Close the file
+		if err := tmpFile.Close(); err != nil {
+			logger.ThrowError(err)
+		}
+	} else {
+		logger.ThrowError("No videos found!")
+	}
+}
+
 var playlistCmd = &cobra.Command{
 	Use:   "playlist :playlistId",
 	Short: "To play all videos from YouTube playlist",
 	Args:  cobra.MaximumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Request playlists...")
-		playlistURL := "/api/v1/playlists/" + args[0]
-		source := instances.FindFastest(playlistURL)
-		if source.Error != nil {
-			logger.ThrowError(source.Error)
-		}
-		defer source.Resp.Body.Close()
-		data, err := ioutil.ReadAll(source.Resp.Body)
-		res, err := interfaces.UnmarshalPlaylist(data)
-		if err != nil {
-			logger.ThrowError(err)
-		}
-		pl := &vlc.VLCPlaylist{}
-		pl.Xmlns = "http://xspf.org/ns/0/"
-		pl.Text = "xmlns"
-		pl.Vlc = "http://www.videolan.org/vlc/playlist/ns/0/"
-		pl.Version = "1"
-		pl.Title = "Playlist"
-		Tracks := []vlc.Track{}
-		Items := []vlc.ExtensionItem{}
-		if len(res.Videos) > 0 {
-			playlists := instances.RequestAllPlaylist(source.FastestURL, res.Videos)
-			if len(playlists) == 0 {
-				logger.ThrowError("Requested videos not available!")
-			}
-			fmt.Println("Total videos: ", len(playlists))
-			flags := []string{
-				"--network-caching=1000",
-			}
-			for i, v := range playlists {
-				id := fmt.Sprint(i)
-				if v != nil {
-					localOption := []string{
-						"video-title=" + v.Title,
-						"input-title-format=" + v.Title,
-						"meta-title=" + v.Title,
-						"meta-artist=" + v.Author,
-						"meta-author=" + v.Author,
-					}
-					if audioOnly {
-						if len(v.AdaptiveFormats) > 1 {
-							for _, a := range v.AdaptiveFormats {
-								if strings.Contains(a.Type, "audio") && string(*a.Container) == audioFormat {
-									trEx := vlc.TrackExtension{
-										Application: "http://www.videolan.org/vlc/playlist/0",
-										ID:          id,
-										Option:      localOption,
-									}
-									tr := vlc.Track{
-										Location:  a.URL,
-										Extension: trEx,
-										Creator:   v.Author,
-										Title:     v.Title,
-										Duration:  fmt.Sprint(v.LengthSeconds),
-									}
-									Tracks = append(Tracks, tr)
-									exItem := vlc.ExtensionItem{
-										Tid: id,
-									}
-									Items = append(Items, exItem)
-									break
-									// flags = append(flags, a.URL, ":video-title="+v.Title, ":meta-title="+v.Title, ":meta-artist="+v.Author, ":meta-author="+v.Title)
-								}
-							}
-						}
-					} else {
-						if len(v.FormatStreams) > 0 {
-							trEx := vlc.TrackExtension{
-								Application: "http://www.videolan.org/vlc/playlist/0",
-								ID:          id,
-								Option:      localOption,
-							}
-							tr := vlc.Track{
-								Location:  v.FormatStreams[0].URL,
-								Extension: trEx,
-								Creator:   v.Author,
-								Title:     v.Title,
-								Duration:  fmt.Sprint(v.LengthSeconds),
-							}
-							Tracks = append(Tracks, tr)
-							exItem := vlc.ExtensionItem{
-								Tid: id,
-							}
-							Items = append(Items, exItem)
-							// flags = append(flags, v.FormatStreams[0].URL, ":video-title="+v.Title, ":meta-title="+v.Title, ":meta-artist="+v.Author, ":meta-author="+v.Title)
-						}
-					}
-				} else {
-					continue
-				}
-			}
-			pl.TrackList = vlc.TrackList{
-				Track: Tracks,
-			}
-			pl.Extension = vlc.Extension{
-				Application: "http://www.videolan.org/vlc/playlist/0",
-				Item:        Items,
-			}
-			tmpFile, err := ioutil.TempFile(os.TempDir(), "playlist-"+"*.xspf")
-			if err != nil {
-				logger.ThrowError("Cannot create temporary file", err)
-			}
+	Run:   runPlaylist,
+}
 
-			fmt.Println("Created Temporary Playlist File: " + tmpFile.Name())
-
-			// Example writing to the file
-			text, err := vlc.MarshalFrom(pl)
-			if err != nil {
-				logger.ThrowError("Failed to marshal from data", err)
-			}
-			if _, err = tmpFile.Write(text); err != nil {
-				logger.ThrowError("Failed to write to temporary file", err)
-			}
-			flags = append(flags, tmpFile.Name())
-			// Remember to clean up the file afterwards
-			defer os.Remove(tmpFile.Name())
-			VLC.Execute(flags...)
-			fmt.Println("Deleting Temporary Playlist")
-
-			// Close the file
-			if err := tmpFile.Close(); err != nil {
-				logger.ThrowError(err)
-			}
-		} else {
-			logger.ThrowError("No videos found!")
-		}
-	},
+var listCmd = &cobra.Command{
+	Use:   "list :playlistId",
+	Short: "Shorthand for playlist. To play all videos from YouTube playlist",
+	Args:  cobra.MaximumNArgs(1),
+	Run:   runPlaylist,
 }
 
 func init() {
-	playCmd.AddCommand(videoCmd, audioCmd, playlistCmd)
+	playCmd.AddCommand(videoCmd, audioCmd, playlistCmd, listCmd)
 	rootCmd.AddCommand(playCmd)
 
 	// Here you will define your flags and configuration settings.
@@ -337,5 +346,7 @@ func init() {
 	videoCmd.Flags().StringVarP(&videoFormat, "format", "F", string(interfaces.Mp4), "Select video format streaming mp4, webm (default mp4)")
 	playlistCmd.Flags().BoolVarP(&audioOnly, "audio-only", "a", false, "Play the playlist in audio format only")
 	playlistCmd.Flags().StringVarP(&audioFormat, "format", "F", string(interfaces.M4A), "Select audio format streaming m4a, webm")
+	listCmd.Flags().BoolVarP(&audioOnly, "audio-only", "a", false, "Play the playlist in audio format only")
+	listCmd.Flags().StringVarP(&audioFormat, "format", "F", string(interfaces.M4A), "Select audio format streaming m4a, webm")
 	audioCmd.Flags().StringVarP(&audioFormat, "format", "F", string(interfaces.M4A), "Select audio format streaming m4a, webm")
 }

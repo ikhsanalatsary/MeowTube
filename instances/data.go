@@ -5,6 +5,8 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/spf13/viper"
 )
 
 // InstanceList is list of Invidious instance sites
@@ -107,14 +109,14 @@ const (
 )
 
 var excludeNames = map[string]string{
-	"api.invidious.io":      "api.invidious.io",
-	"invidious.io":          "invidious.io",
-	"invidio.us":            "invidio.us",
-	"invidious.fdn.fr":      "invidious.fdn.fr",
-	"invidious.kavin.rocks": "invidious.kavin.rocks",
-	"invidious.snopyta.org": "invidious.snopyta.org",
-	"yewtu.be":              "yewtu.be",
-	"ytprivate.com":         "ytprivate.com",
+	"api.invidious.io": "api.invidious.io",
+	"invidious.io":     "invidious.io",
+	"invidio.us":       "invidio.us",
+	// 	"invidious.fdn.fr":      "invidious.fdn.fr",
+	// 	"invidious.kavin.rocks": "invidious.kavin.rocks",
+	// 	"invidious.snopyta.org": "invidious.snopyta.org",
+	// 	"yewtu.be":              "yewtu.be",
+	// 	"ytprivate.com":         "ytprivate.com",
 }
 
 func FindInstanceList() (urls []string, err error) {
@@ -132,6 +134,9 @@ func FindInstanceList() (urls []string, err error) {
 				for _, v := range resp.Psp.Monitors {
 					if v.StatusClass == StatusSuccess {
 						if _, exist := excludeNames[v.Name]; !exist {
+							if n := viper.Get(v.Name); n != nil && n == false {
+								continue
+							}
 							instanceURLs = append(instanceURLs, "https://"+v.Name)
 						}
 					}

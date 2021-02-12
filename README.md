@@ -92,6 +92,17 @@ meowtube --help
 
 **NOTE:** Every argument has `--help` flag to see their specific usage
 
+### Global config
+This is to use excluding or including invidious instances. You can add this config on your `$HOME` PATH and named it with `.meowtube.yaml`. For excluding, you can set it as false. Example:
+
+```
+invidious.fdn.fr: false
+invidious.kavin.rocks: false
+invidious.snopyta.org: false
+yewtu.be: true
+ytprivate.com: false
+```
+
 ## ✍️ Authors <a name = "authors"></a>
 
 - [@ikhsanalatsary](https://github.com/ikhsanalatsary) - Idea & Initial work

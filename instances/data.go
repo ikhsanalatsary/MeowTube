@@ -9,31 +9,34 @@ import (
 	"github.com/spf13/viper"
 )
 
-// InstanceList is list of Invidious instance sites
+// InstanceList is list of Invidious instance sites, currently we used from uptime
 var InstanceList = []string{
-	// "https://invidious.snopyta.org",
-	// "https://yewtu.be",
+	"https://invidious.snopyta.org",
+	"https://yewtu.be",
 	"https://invidious.tube", "https://invidious.xyz",
-	// "https://invidious.kavin.rocks",
-	// "https://tube.connect.cafe",
+	"https://invidious.kavin.rocks",
+	"https://tube.connect.cafe",
 	"https://invidious.zapashcanon.fr",
-	// "https://invidious.fdn.fr",
+	"https://invidious.fdn.fr",
 	"https://invidiou.site",
-	// "https://vid.mint.lgbt",
-	// "https://invidious.site",
+	"https://vid.mint.lgbt",
+	"https://invidious.site",
 	"https://invidious.048596.xyz",
 }
 
+// UnmarshalServerInstanceList unmarshaling response data to ServerInstanceList
 func UnmarshalServerInstanceList(data []byte) (ServerInstanceList, error) {
 	var r ServerInstanceList
 	err := json.Unmarshal(data, &r)
 	return r, err
 }
 
+// Marshal marshaling ServerInstanceList to response data
 func (r *ServerInstanceList) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
+// ServerInstanceList uptime response
 type ServerInstanceList struct {
 	Status     string     `json:"status"`
 	Psp        Psp        `json:"psp"`
@@ -41,6 +44,7 @@ type ServerInstanceList struct {
 	Statistics Statistics `json:"statistics"`
 }
 
+// Psp ServerInstanceList uptime response ServerInstanceList.Psp
 type Psp struct {
 	PerPage       int64         `json:"perPage"`
 	TotalMonitors int64         `json:"totalMonitors"`
@@ -49,6 +53,7 @@ type Psp struct {
 	Logs          []interface{} `json:"logs"`
 }
 
+// Monitor ServerInstanceList uptime response ServerInstanceList.Monitors
 type Monitor struct {
 	MonitorID   int64       `json:"monitorId"`
 	CreatedAt   int64       `json:"createdAt"`
@@ -61,11 +66,13 @@ type Monitor struct {
 	The30DRatio L1          `json:"30dRatio"`
 }
 
+// L1 ServerInstanceList uptime response ServerInstanceList.Monitors.DailyRatios
 type L1 struct {
 	Ratio string `json:"ratio"`
 	Label Label  `json:"label"`
 }
 
+// Statistics ServerInstanceList uptime response ServerInstanceList.Statistics
 type Statistics struct {
 	Uptime         Uptime      `json:"uptime"`
 	LatestDowntime interface{} `json:"latest_downtime"`
@@ -73,12 +80,14 @@ type Statistics struct {
 	CountResult    string      `json:"count_result"`
 }
 
+// Counts ServerInstanceList uptime response ServerInstanceList.Statistics.Counts
 type Counts struct {
 	Up     int64 `json:"up"`
 	Down   int64 `json:"down"`
 	Paused int64 `json:"paused"`
 }
 
+// Uptime ServerInstanceList uptime response ServerInstanceList.Statistics.Uptime
 type Uptime struct {
 	L1  L1 `json:"l1"`
 	L7  L1 `json:"l7"`
@@ -108,17 +117,14 @@ const (
 	HTTPS Type = "HTTP(s)"
 )
 
+// exludeNames are not the list of invidious instances
 var excludeNames = map[string]string{
 	"api.invidious.io": "api.invidious.io",
 	"invidious.io":     "invidious.io",
 	"invidio.us":       "invidio.us",
-	// 	"invidious.fdn.fr":      "invidious.fdn.fr",
-	// 	"invidious.kavin.rocks": "invidious.kavin.rocks",
-	// 	"invidious.snopyta.org": "invidious.snopyta.org",
-	// 	"yewtu.be":              "yewtu.be",
-	// 	"ytprivate.com":         "ytprivate.com",
 }
 
+// FindInstanceList to find Instance list from uptime monitor invidious server
 func FindInstanceList() (urls []string, err error) {
 	var data []byte
 	var resp ServerInstanceList

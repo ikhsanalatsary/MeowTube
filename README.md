@@ -46,6 +46,7 @@ First, make sure VLC already installed on your machine.
 4. Move the file to any folder what you want (OPTIONAL)
 5. Register MeowTube to your `PATH` variable (choose where meowtube is located)
 6. Create an alias for MeowTube (OPTIONAL)
+7. You may need to create [meowtube config](#global-config), due to some instances uses anti bot protection
 
 #### Register MeowTube to the PATH
 
@@ -91,6 +92,19 @@ meowtube --help
 | video       | To play YouTube video                                                               |
 
 **NOTE:** Every argument has `--help` flag to see their specific usage
+
+### Global config
+This config used for excluding or including `invidious instances`. You can add this config on your `$HOME` PATH and named it with `.mewtube.yaml`. For excluding, you can set it as false. Example:
+
+```
+invidious.fdn.fr: false
+invidious.kavin.rocks: false
+invidious.snopyta.org: false
+yewtu.be: true
+ytprivate.com: false
+```
+
+**Reference:** [Invidious Instances](https://github.com/iv-org/documentation/blob/master/Invidious-Instances.md)
 
 ## ✍️ Authors <a name = "authors"></a>
 

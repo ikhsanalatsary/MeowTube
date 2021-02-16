@@ -114,3 +114,8 @@ ytprivate.com: false
 
 - Inspired by [ohmyzsh/spotify](https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/osx/spotify)
 - Using [Invidious APIs](https://github.com/iv-org/invidious)
+
+## 📌 Misc
+I also published an app that uses [Invidious APIs](https://github.com/iv-org/invidious). You can download it on Play Store.
+
+<a href='https://play.google.com/store/apps/details?id=com.insoundious&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="300"/></a>

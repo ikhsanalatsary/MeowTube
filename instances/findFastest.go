@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/corpix/uarand"
@@ -36,8 +37,10 @@ func FindFastest(path string) FastestInstance {
 		mirrorURL := url
 		go func() {
 			start := time.Now()
-			// hasCookie := true
-			req, _ := http.NewRequest("GET", mirrorURL+path, nil)
+			// There is an videoID that uses `-` in the leading of their characters.
+			// But go cannot remove single quotes on string characters automatically.
+			p := strings.Replace(path, "'", "", 2)
+			req, _ := http.NewRequest("GET", mirrorURL+p, nil)
 			req.Header.Add("Upgrade-Insecure-Requests", "1")
 			req.Header.Add("User-Agent", uarand.GetRandom())
 			req.Header.Add("Origin", mirrorURL)
@@ -49,17 +52,17 @@ func FindFastest(path string) FastestInstance {
 			latencyChan <- latency
 			if err == nil {
 				if res.StatusCode >= 200 && res.StatusCode < 400 {
-					fmt.Print("Succeed request url: ", mirrorURL+path)
+					fmt.Print("Succeed request url: ", mirrorURL+p)
 					resp <- res
 					resError <- nil
 				} else {
-					fmt.Println("Failed request url", mirrorURL+path)
+					fmt.Println("Failed request url", mirrorURL+p)
 					fmt.Println("statusCode: ", res.StatusCode)
 					resp <- nil
 					resError <- errors.New("Unable to request")
 				}
 			} else {
-				fmt.Println("Failed request url", mirrorURL+path)
+				fmt.Println("Failed request url", mirrorURL+p)
 				resp <- nil
 				resError <- err
 			}

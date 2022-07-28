@@ -21,11 +21,11 @@ func Fetch(baseURL string) (*http.Response, error) {
 		return nil, err
 	}
 	var host, origin string = u.Host, u.Scheme + "://" + u.Hostname()
-	req.Header.Add("Upgrade-Insecure-Requests", "1")
-	req.Header.Add("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0")
-	req.Header.Add("Origin", origin)
-	req.Header.Add("Host", host)
-	req.Header.Add("Accept", "*/*")
+	req.Header.Set("Upgrade-Insecure-Requests", "1")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
+	req.Header.Set("Origin", origin)
+	req.Header.Set("Host", host)
+	req.Header.Set("Accept", "*/*")
 
 	return Request.Do(req)
 }

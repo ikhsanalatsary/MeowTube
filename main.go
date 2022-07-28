@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/ikhsanalatsary/MeowTube/cmd"
+import "MeowTube/cmd"
 
 var Version string
 

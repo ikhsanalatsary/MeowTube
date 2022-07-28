@@ -4,8 +4,8 @@ import (
 	"io/ioutil"
 	"sync"
 
-	"github.com/ikhsanalatsary/MeowTube/client"
-	"github.com/ikhsanalatsary/MeowTube/interfaces"
+	"MeowTube/client"
+	"MeowTube/interfaces"
 )
 
 // RequestAllPlaylist is a function to find the fastest instance with low latency

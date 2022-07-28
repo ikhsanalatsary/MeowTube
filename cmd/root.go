@@ -19,7 +19,8 @@ import (
 	"fmt"
 	"os"
 
-	Vlc "github.com/ikhsanalatsary/MeowTube/vlc"
+	Vlc "MeowTube/vlc"
+
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

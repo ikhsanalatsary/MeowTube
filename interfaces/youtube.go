@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/ikhsanalatsary/MeowTube/logger"
+	"MeowTube/logger"
 )
 
 // YoutubeURL map valid url

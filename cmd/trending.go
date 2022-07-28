@@ -21,9 +21,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ikhsanalatsary/MeowTube/instances"
-	"github.com/ikhsanalatsary/MeowTube/interfaces"
-	"github.com/ikhsanalatsary/MeowTube/logger"
+	"MeowTube/instances"
+	"MeowTube/interfaces"
+	"MeowTube/logger"
+
 	"github.com/spf13/cobra"
 )
 

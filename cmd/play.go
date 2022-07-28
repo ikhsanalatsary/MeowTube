@@ -21,10 +21,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ikhsanalatsary/MeowTube/instances"
-	"github.com/ikhsanalatsary/MeowTube/interfaces"
-	"github.com/ikhsanalatsary/MeowTube/logger"
-	"github.com/ikhsanalatsary/MeowTube/vlc"
+	"MeowTube/instances"
+	"MeowTube/interfaces"
+	"MeowTube/logger"
+	"MeowTube/vlc"
+
 	"github.com/spf13/cobra"
 )
 

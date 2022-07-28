@@ -21,7 +21,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.15
+        go-version: 1.18
 
     - name: Build
       run: mkdir -p ./output-${{ matrix.goos }}-${{ matrix.goarch }} && env GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags "-X main.Version=v1.0.0-beta" -o ./output-${{ matrix.goos }}-${{ matrix.goarch }}

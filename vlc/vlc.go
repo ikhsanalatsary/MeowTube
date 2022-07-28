@@ -6,8 +6,9 @@ import (
 	"os/exec"
 	"runtime"
 
+	"MeowTube/logger"
+
 	exec2 "github.com/cli/safeexec"
-	"github.com/ikhsanalatsary/MeowTube/logger"
 )
 
 // VideoLAN struct

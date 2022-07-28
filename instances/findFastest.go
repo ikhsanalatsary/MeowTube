@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ikhsanalatsary/MeowTube/client"
+	"MeowTube/client"
 )
 
 // FastestInstance is a response the fastest instance from FindFastest

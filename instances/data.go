@@ -129,7 +129,7 @@ func FindInstanceList() (urls []string, err error) {
 	var data []byte
 	var resp ServerInstanceList
 	var instanceURLs []string
-	url := "https://uptime.invidious.io/api/getMonitorList/89VnzSKAn?page=1&_=1611588676444"
+	url := "https://stats.uptimerobot.com/api/getMonitorList/89VnzSKAn?page=1&_=1659018122232"
 	res, err := http.Get(url)
 	if err == nil {
 		if res.StatusCode >= 200 && res.StatusCode < 400 {
